@@ -1,0 +1,78 @@
+%!TEX root = ../doc.tex
+\chapter{Anforderungsanalyse}
+\label{sec:anforderungsanalyse}
+
+\section{Use Cases}
+Für die bessere Lesbarkeit werden in den Use Cases die folgenden Felder weg gelassen, weil sie immer den selben Wert haben.
+\begin{usecase}
+\addtitle{UC-000}{-}
+\additemizedfield{Autoren}{
+	\item (immer) Nicolas Roos
+}
+\additemizedfield{Quelle}{
+	\item (immer) Nicolas Roos
+}
+\additemizedfield{Verantwortlicher}{
+	\item (immer) Nicolas Roos
+}
+
+\end{usecase}
+
+\newpage{}
+\addcontentsline{toc}{subsection}{UC-001 Aktion definieren}
+\begin{usecase}
+\addtitle{UC-001}{Aktion definieren}
+\addfield{Priorität}{Zwingend}
+\addfield{Kritikalität}{Hoch}
+\addfield{Beschreibung}{Der Benutzer kann eine Aktion für das erreichen bzw. verlassen eines bestimmten Wireless LANs definieren}
+\addfield{Auslösendes Ereignis}{Der Benutzer erstellt eine neue Aktion}
+\addfield{Akteure}{Benutzer}
+\addfield{Vorbedingungen}{-}
+\addfield{Nachbedingungen}{-}
+\addfield{Ergebnis}{Eine gespeicherte Aktion}
+\addscenario{Hauptszenario}{
+	\item Der Benutzer erstellt eine neue Aktion.
+	\item Der Benutzer wählt für die Aktion ein bestimmtes bekanntes Wireless LAN aus.
+	\item Der Benutzer wählt wann die Aktion ausgeführt wird.
+	\item Der Benutzer gibt noch zusätzliche Parameter ein.
+	\item Die App speichert die Aktion.
+}
+\addfield{Alternativszenarien}{-}
+%\addscenario{Alternativszenarien}{
+%	\item Job wird über API gestartet...
+%}
+\addfield{Ausnahmeszenarien}{-}
+%\addscenario{Ausnahmeszenarien}{\item ...}
+\addfield{Qualitäten}{-}
+\end{usecase}
+
+\newpage{}
+\addcontentsline{toc}{subsection}{UC-002 Aktion ausführen}
+\begin{usecase}
+\addtitle{UC-002}{Aktion ausführen}
+\addfield{Priorität}{Zwingend}
+\addfield{Kritikalität}{Hoch}
+\addfield{Beschreibung}{Das System kann beim erreichen bzw. verlassen eines bestimmten Wireless LANs die definierte Aktion ausführen}
+\addfield{Auslösendes Ereignis}{Die App erhält eine Meldung vom Android System}
+\addfield{Akteure}{App}
+\addfield{Vorbedingungen}{Die App läuft im Vordergrund oder Hintergrund und hat die Möglichkeit Systemmeldungen zu bekommen}
+\addfield{Nachbedingungen}{-}
+\addfield{Ergebnis}{Eine ausgeführte Aktion}
+\addscenario{Hauptszenario}{
+	\item Die App bekommt eine Meldung über die Änderung des Wireless LANs Status
+	\item Die App überprüft ob für die Kombination (SSID und erreichen bzw. verlassen) eine Aktion vorhanden ist
+	\item Die App führt die Aktion aus und Loggt das Ereignis
+}
+\addfield{Alternativszenarien}{-}
+%\addscenario{Alternativszenarien}{
+%	\item Job wird über API gestartet...
+%}
+\addfield{Ausnahmeszenarien}{-}
+%\addscenario{Ausnahmeszenarien}{\item ...}
+\addfield{Qualitäten}{-}
+\end{usecase}
+
+
+\newpage{}
+\section{Funktionale Anforderungen}
+\label{sec:funktionaleanforderungen}
