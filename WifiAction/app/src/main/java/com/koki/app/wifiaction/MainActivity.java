@@ -10,15 +10,24 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
+
+import com.koki.app.wifiaction.model.Action;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements ContentHandler.IContentHandlerCallback{
 
     private static final String TAG = "MainActivity";
+
+    private ContentHandler mContentHandler;
+    private ArrayList<Action> mActionList;
+
+    private ListView lvActions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,30 +35,59 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         Button btnNotifiy = (Button) findViewById(R.id.btnNotify);
+        lvActions = (ListView) findViewById(R.id.lvActions);
         btnNotifiy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startNotifiycation();
             }
         });
-
-        getKnownWifi();
+        loadActionList();
     }
 
     private void startNotifiycation() {
         ActionService.startActionNotification(this,"Hello :)");
     }
 
-    private void getKnownWifi() {
+    private ArrayList<String> getKnownWifi() {
         WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         List<WifiConfiguration> wifis = wifi.getConfiguredNetworks();
-        Log.i(TAG,wifis.toString());
+        ArrayList<String> wifiList = new ArrayList<>();
         for(WifiConfiguration w : wifis) {
-            Log.i(TAG,"Network id: " + w.networkId + "  Network SSID: " + w.SSID);
+            //Log.i(TAG,"Network id: " + w.networkId + "  Network SSID: " + w.SSID);
+            wifiList.add(w.SSID);
         }
-        /*for(int i=0;i<wifis.size();i++) {
-            Log.i(TAG,wifis.get(i).toString());
-        }*/
+        return wifiList;
+    }
+
+
+    private void setupActionList() {
+        if(mActionList == null) {
+            return;
+        }
+
+        ArrayAdapter<Action> actionAdapter = new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,mActionList);
+        lvActions.setAdapter(actionAdapter);
+    }
+
+    private void loadActionList() {
+        if(mContentHandler == null) {
+            mContentHandler = new ContentHandler(this,this);
+        }
+        mContentHandler.startLoadingActionList();
+    }
+
+
+    private void saveActionList() {
+        if(mActionList == null) {
+            return;
+        }
+
+        if(mContentHandler == null) {
+            mContentHandler  = new ContentHandler(this,this);
+        }
+
+        mContentHandler.startSavingActionList(mActionList);
     }
 
 
@@ -73,5 +111,22 @@ public class MainActivity extends Activity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onContentLoaded(ArrayList<Action> actionList) {
+        mActionList = actionList;
+        setupActionList();
+
+    }
+
+    @Override
+    public void onContentSaved() {
+        //TODO: Show Notification
+    }
+
+    @Override
+    public void onError(String errorMessage) {
+        //TODO: Show Error
     }
 }
