@@ -12,6 +12,19 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        getKnownWifi();
+    }
+    private void getKnownWifi() {
+        WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        List<WifiConfiguration> wifis = wifi.getConfiguredNetworks();
+        Log.i(TAG,wifis.toString());
+        for(WifiConfiguration w : wifis) {
+            Log.i(TAG,"Network id: " + w.networkId + "  Network SSID: " + w.SSID);
+        }
+        /*for(int i=0;i<wifis.size();i++) {
+            Log.i(TAG,wifis.get(i).toString());
+        }*/
     }
 
 
