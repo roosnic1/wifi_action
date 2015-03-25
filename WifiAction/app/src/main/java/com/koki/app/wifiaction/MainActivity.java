@@ -1,20 +1,45 @@
 package com.koki.app.wifiaction;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.net.wifi.WifiConfiguration;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends Activity {
+
+    private static final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Button btnNotifiy = (Button) findViewById(R.id.btnNotify);
+        btnNotifiy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startNotifiycation();
+            }
+        });
+
         getKnownWifi();
     }
+
+    private void startNotifiycation() {
+        ActionService.startActionNotification(this,"Hello :)");
+    }
+
     private void getKnownWifi() {
         WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         List<WifiConfiguration> wifis = wifi.getConfiguredNetworks();

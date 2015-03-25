@@ -28,6 +28,11 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
+
+        <service
+            android:name=".ActionService"
+            android:exported="false" >
+        </service>
     </application>
 
 </manifest>
