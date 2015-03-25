@@ -6,13 +6,7 @@ import android.app.NotificationManager;
 import android.content.Intent;
 import android.content.Context;
 
-/**
- * An {@link IntentService} subclass for handling asynchronous task requests in
- * a service on a separate handler thread.
- * <p/>
- * TODO: Customize class - update intent actions, extra parameters and static
- * helper methods.
- */
+
 public class ActionService extends IntentService {
     private static final String ACTION_SMS = "com.koki.app.wifiaction.action.SMS";
     private static final String ACTION_BLUETOOTH = "com.koki.app.wifiaction.action.BLUETOOTH";
