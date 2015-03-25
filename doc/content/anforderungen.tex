@@ -76,3 +76,46 @@ Für die bessere Lesbarkeit werden in den Use Cases die folgenden Felder weg gel
 \newpage{}
 \section{Funktionale Anforderungen}
 \label{sec:funktionaleanforderungen}
+
+\addcontentsline{toc}{subsection}{FREQ-001 Bekannte Wireless LANs auflisten}
+\begin{usecase}
+\addtitle{FREQ-001}{Bekannte Wireless LANs auflisten}
+\addfield{UC-Referenz}{UC-001}
+\addfield{Beschreibung}{Die App kann die dem Android System bekannten Wireless LANs auflisten. Bekannte Wireless LANs sind welche mit denen das Android System bereits eine Verbindung hergestellt hat. Von den bekannten Wireless LANs kann die APP die SSID lesen.}
+\end{usecase}
+
+\addcontentsline{toc}{subsection}{FREQ-002 Neue Aktion erstellen}
+\begin{usecase}
+\addtitle{FREQ-002}{Neue Aktion erstellen}
+\addfield{UC-Referenz}{UC-001}
+\addfield{Beschreibung}{Der Benutzer kann eine Aktion erstellen, dafür ein Wireless LAN auswählen und den Ausführungszeitpunk definieren. Die App kann die Aktion persistent abspeichern.}
+\end{usecase}
+
+\addcontentsline{toc}{subsection}{FREQ-003 Aktion löschen}
+\begin{usecase}
+\addtitle{FREQ-003}{Aktion löschen}
+\addfield{UC-Referenz}{UC-001}
+\addfield{Beschreibung}{Der Benutzer kann eine bereits erstellt Aktion löschen.}
+\end{usecase}
+
+\addcontentsline{toc}{subsection}{FREQ-004 Wirless LAN Änderungen erkennen}
+\begin{usecase}
+\addtitle{FREQ-004}{Wirless LAN Änderungen erkennen}
+\addfield{UC-Referenz}{UC-002}
+\addfield{Beschreibung}{Die App erkennt Änderungen des Wireless LANs status und kann die SSID des verbundenen Wireless LANs lesen.}
+\end{usecase}
+
+\addcontentsline{toc}{subsection}{FREQ-005 Aktion ausführen}
+\begin{usecase}
+\addtitle{FREQ-005}{Aktion ausführen}
+\addfield{UC-Referenz}{UC-002}
+\addfield{Beschreibung}{Die App kann die definierten Aktion ausführen. Die App muss dazu nicht aktiv genutzt werden.}
+\end{usecase}
+
+\addcontentsline{toc}{subsection}{FREQ-006 Ereignis loggen}
+\begin{usecase}
+\addtitle{FREQ-006}{Ereignis loggen}
+\addfield{UC-Referenz}{UC-002}
+\addfield{Beschreibung}{Die App kann die Ereignisse  Wireless LAN Status Änderungen und die ausgeführten Aktion loggen.}
+\end{usecase}
+
