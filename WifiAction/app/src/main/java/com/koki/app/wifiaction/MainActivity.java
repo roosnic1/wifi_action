@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.koki.app.wifiaction.model.Action;
+import com.koki.app.wifiaction.model.Wifi;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,19 +44,21 @@ public class MainActivity extends Activity implements ContentHandler.IContentHan
             }
         });
         loadActionList();
+        getKnownWifi();
     }
 
     private void startNotifiycation() {
         ActionService.startActionNotification(this,"Hello :)");
     }
 
-    private ArrayList<String> getKnownWifi() {
+    private ArrayList<Wifi> getKnownWifi() {
         WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         List<WifiConfiguration> wifis = wifi.getConfiguredNetworks();
-        ArrayList<String> wifiList = new ArrayList<>();
+        ArrayList<Wifi> wifiList = new ArrayList<>();
         for(WifiConfiguration w : wifis) {
-            //Log.i(TAG,"Network id: " + w.networkId + "  Network SSID: " + w.SSID);
-            wifiList.add(w.SSID);
+            Log.i(TAG, "Network id: " + w.networkId + "  Network SSID: " + w.SSID);
+            Wifi wi = new Wifi(w.SSID,w.networkId);
+            wifiList.add(wi);
         }
         return wifiList;
     }
