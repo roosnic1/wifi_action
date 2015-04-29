@@ -33,6 +33,11 @@
             android:name=".ActionService"
             android:exported="false" >
         </service>
+
+        <activity
+            android:name=".add.NotificationActivity"
+            android:label="@string/title_activity_notification" >
+        </activity>
     </application>
 
 </manifest>

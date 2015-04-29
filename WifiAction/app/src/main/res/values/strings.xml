@@ -3,4 +3,16 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_notification">NotificationActivity</string>
+
+
+
+    <string name="cb_on_connect">Execute on connect</string>
+    <string name="cb_on_leave">Execute on leave</string>
+
+    <!-- Add Notification -->
+    <string name="noti_title">Add a new Notification</string>
+    <string name="noti_et_message_hint">Message in the Notification</string>
+    <string name="notei_bn_add">Add Notification</string>
+
 </resources>
