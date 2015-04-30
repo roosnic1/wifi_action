@@ -2,18 +2,24 @@ package com.koki.app.wifiaction.add;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
+import android.widget.TextView;
 
 import com.koki.app.wifiaction.R;
+import com.koki.app.wifiaction.model.ActionType;
 import com.koki.app.wifiaction.model.Wifi;
+import com.koki.app.wifiaction.model.Action;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +31,8 @@ public class NotificationActivity extends Activity {
     private CheckBox cbOnLeave;
     private EditText etMessage;
     private Button bnAdd;
+
+    private ArrayList<Wifi> wifis;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +46,27 @@ public class NotificationActivity extends Activity {
         etMessage = (EditText)findViewById(R.id.etMessage);
         bnAdd = (Button)findViewById(R.id.bnAdd);
 
+        //Call setups
+
+        if(savedInstanceState == null) {
+            wifis = (ArrayList<Wifi>) getIntent().getExtras().getSerializable("WIFIS");
+        } else {
+            wifis = (ArrayList<Wifi>) savedInstanceState.getSerializable("WIFIS");
+        }
+
+        if(wifis != null) {
+            setupSpWifis();
+        } else {
+            //TODO: Check this Should never happen
+            finish();
+        }
+
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("WIFIS", wifis);
     }
 
     @Override
@@ -63,8 +92,35 @@ public class NotificationActivity extends Activity {
     }
 
 
-    private void setupSpWifis(ArrayList<Wifi> wifis) {
+    private void setupSpWifis() {
+        WifiAdapter wifiAdapter = new WifiAdapter(this,R.layout.spinneritem_wifi,wifis);
+        spWifis.setAdapter(wifiAdapter);
+    }
 
+    private void setupButton() {
+        bnAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                validateAndReturnAction();
+            }
+        });
+    }
+
+
+    private void validateAndReturnAction() {
+        //Validation
+        if(!cbOnConnect.isChecked() && !cbOnLeave.isChecked()) {
+            //TODO: Toast
+            return;
+        } else if(etMessage.getText().length() == 0) {
+            //Todo: Toast
+            return;
+        }
+
+        Action a = new Action("test",((Wifi)spWifis.getSelectedItem()).getSsid(), ActionType.NOTIFICATION,cbOnConnect.isChecked(),cbOnLeave.isChecked());
+        Intent i = new Intent();
+        i.putExtra("ACTION",a);
+        setResult(RESULT_OK,i);
     }
 
 
@@ -72,10 +128,28 @@ public class NotificationActivity extends Activity {
 
 
     private class WifiAdapter extends ArrayAdapter<Wifi> {
-        
 
-        public WifiAdapter(Context context, int resource, int textViewResourceId, List<Wifi> objects) {
-            super(context, resource, textViewResourceId, objects);
+        private ArrayList<Wifi> mWifi;
+        private int mResourceId;
+
+        public WifiAdapter(Context context, int resourceId, ArrayList<Wifi> objects) {
+            super(context, resourceId, objects);
+            mWifi = objects;
+            mResourceId = resourceId;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+            if(convertView == null) {
+                LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                convertView = inflater.inflate(mResourceId,null);
+            }
+
+            TextView tvWifiName = (TextView) convertView.findViewById(R.id.tvWifiName);
+            tvWifiName.setText(mWifi.get(position).getSsid());
+
+            return convertView;
         }
     }
 }
