@@ -25,7 +25,10 @@ public class MainActivity extends Activity implements ContentHandler.IContentHan
 
     private static final String TAG = "MainActivity";
 
-    private static final int NOTIFICATION_ACTIVITY = 1;
+    public static final int ACTION_SMS = 1;
+    public static final int ACTION_BLUETOOTH = 2;
+    public static final int ACTION_GPS = 3;
+    public static final int ACTION_NOTIFICATION = 4;
 
 
 
@@ -65,7 +68,7 @@ public class MainActivity extends Activity implements ContentHandler.IContentHan
     private void startNotifiycation() {
         Intent i = new Intent(this, ActionActivity.class);
         i.putExtra("WIFIS",getKnownWifi());
-        startActivityForResult(i,NOTIFICATION_ACTIVITY);
+        startActivityForResult(i, ACTION_NOTIFICATION);
     }
 
 
@@ -74,7 +77,7 @@ public class MainActivity extends Activity implements ContentHandler.IContentHan
         //super.onActivityResult(requestCode, resultCode, data);
 
         switch(requestCode) {
-            case NOTIFICATION_ACTIVITY:
+            case ACTION_NOTIFICATION:
                 if(resultCode == RESULT_OK) {
                     Log.i("MA", "Result OK");
                     Action a = (Action) data.getSerializableExtra("ACTION");
