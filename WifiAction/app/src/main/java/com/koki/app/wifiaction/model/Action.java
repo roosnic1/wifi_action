@@ -91,9 +91,16 @@ public class Action implements Serializable {
 
     @Override
     public String toString() {
-        return "Action{" +
-                "title='" + title + '\'' +
-                ", ssid='" + ssid + '\'' +
-                '}';
+        String when = "";
+        if(isOnConnect()) {
+            when = "OnConnect ";
+        }
+        if(isOnLeave()) {
+            when += "OnLeave";
+        }
+        return  "Title: " + title + "\n" +
+                "SSID: " + ssid + "\n" +
+                "When: " + when;
+
     }
 }
