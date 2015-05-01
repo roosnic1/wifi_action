@@ -58,6 +58,7 @@ public class NotificationActivity extends Activity {
 
         if(wifis != null) {
             setupSpWifis();
+            setupButton();
         } else {
             //TODO: Check this Should never happen
             finish();
@@ -114,15 +115,20 @@ public class NotificationActivity extends Activity {
         if(!cbOnConnect.isChecked() && !cbOnLeave.isChecked()) {
             //TODO: Toast
             return;
+        } else if(etTitle.getText().length() == 0) {
+            //Todo: Toast
+            return;
         } else if(etMessage.getText().length() == 0) {
             //Todo: Toast
             return;
         }
 
-        Action a = new Action("test",((Wifi)spWifis.getSelectedItem()).getSsid(), ActionType.NOTIFICATION,cbOnConnect.isChecked(),cbOnLeave.isChecked());
+        Action a = new Action(etTitle.getText().toString(),((Wifi)spWifis.getSelectedItem()).getSsid(), ActionType.NOTIFICATION,cbOnConnect.isChecked(),cbOnLeave.isChecked());
+        a.setStringParam1(etMessage.getText().toString());
         Intent i = new Intent();
         i.putExtra("ACTION",a);
-        setResult(RESULT_OK,i);
+        setResult(RESULT_OK, i);
+        finish();
     }
 
 

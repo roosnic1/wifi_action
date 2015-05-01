@@ -52,6 +52,7 @@ public class ContentHandler {
             } catch(FileNotFoundException e) {
                 //e.printStackTrace();
                 Log.i(TAG,"File not Found... (Not critical)");
+                actionList = new ArrayList<>();
             } catch(IOException | ClassNotFoundException e) {
                 e.printStackTrace();
                 //TODO: Implement proper Error handling

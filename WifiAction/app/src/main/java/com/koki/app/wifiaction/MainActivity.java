@@ -48,8 +48,19 @@ public class MainActivity extends Activity implements ContentHandler.IContentHan
                 startNotifiycation();
             }
         });
-        loadActionList();
-        //getKnownWifi();
+        if(savedInstanceState == null) {
+            loadActionList();
+        } else {
+            mActionList = (ArrayList<Action>) savedInstanceState.getSerializable("ACTIONLIST");
+        }
+
+        setupActionList();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("ACTIONLIST", mActionList);
     }
 
     private void startNotifiycation() {
@@ -67,7 +78,14 @@ public class MainActivity extends Activity implements ContentHandler.IContentHan
         switch(requestCode) {
             case NOTIFICATION_ACTIVITY:
                 if(resultCode == RESULT_OK) {
-                    Log.i("MA","Result OK");
+                    Log.i("MA", "Result OK");
+                    Action a = (Action) data.getSerializableExtra("ACTION");
+                    mActionList.add(a);
+                    saveActionList(); //TODO Implement observer for save
+                    setupActionList(); //TODO Implement observer for setupactionlist
+                    Log.i("MA", "Action Title: " + a.getTitle());
+                } else {
+                    Log.i("MA","Result: " + resultCode);
                 }
         }
     }
@@ -77,7 +95,6 @@ public class MainActivity extends Activity implements ContentHandler.IContentHan
         List<WifiConfiguration> wifis = wifi.getConfiguredNetworks();
         ArrayList<Wifi> wifiList = new ArrayList<>();
         for(WifiConfiguration w : wifis) {
-            Log.i(TAG, "Network id: " + w.networkId + "  Network SSID: " + w.SSID);
             Wifi wi = new Wifi(w.SSID,w.networkId);
             wifiList.add(wi);
         }
@@ -140,6 +157,7 @@ public class MainActivity extends Activity implements ContentHandler.IContentHan
     @Override
     public void onContentLoaded(ArrayList<Action> actionList) {
         mActionList = actionList;
+        Log.i("MA","Loaded Actionlist");
         setupActionList();
 
     }
@@ -151,6 +169,8 @@ public class MainActivity extends Activity implements ContentHandler.IContentHan
 
     @Override
     public void onError(String errorMessage) {
-        //TODO: Show Error
+        //TODO: Show Error if critical
+        Log.i("MA","Error while loading ActionList");
+        mActionList = new ArrayList<>();
     }
 }
