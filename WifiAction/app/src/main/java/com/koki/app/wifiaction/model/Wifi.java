@@ -1,9 +1,11 @@
 package com.koki.app.wifiaction.model;
 
+import java.io.Serializable;
+
 /**
  * Created by koki on 29/04/15.
  */
-public class Wifi {
+public class Wifi implements Serializable {
     private String ssid;
     private int networkId;
 
