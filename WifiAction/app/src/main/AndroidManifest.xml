@@ -35,7 +35,7 @@
         </service>
 
         <activity
-            android:name=".add.NotificationActivity"
+            android:name=".ActionActivity"
             android:label="@string/title_activity_notification"
             android:parentActivityName=".MainActivity">
         </activity>

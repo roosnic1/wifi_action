@@ -1,4 +1,4 @@
-package com.koki.app.wifiaction.add;
+package com.koki.app.wifiaction;
 
 import android.app.Activity;
 import android.content.Context;
@@ -24,7 +24,7 @@ import com.koki.app.wifiaction.model.Action;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NotificationActivity extends Activity {
+public class ActionActivity extends Activity {
 
     private Spinner spWifis;
     private CheckBox cbOnConnect;

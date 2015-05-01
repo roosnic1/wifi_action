@@ -14,7 +14,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
-import com.koki.app.wifiaction.add.NotificationActivity;
 import com.koki.app.wifiaction.model.Action;
 import com.koki.app.wifiaction.model.Wifi;
 
@@ -64,7 +63,7 @@ public class MainActivity extends Activity implements ContentHandler.IContentHan
     }
 
     private void startNotifiycation() {
-        Intent i = new Intent(this, NotificationActivity.class);
+        Intent i = new Intent(this, ActionActivity.class);
         i.putExtra("WIFIS",getKnownWifi());
         startActivityForResult(i,NOTIFICATION_ACTIVITY);
         //ActionService.startActionNotification(this,"Hello :)");
