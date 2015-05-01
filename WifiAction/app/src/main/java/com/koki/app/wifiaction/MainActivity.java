@@ -67,7 +67,6 @@ public class MainActivity extends Activity implements ContentHandler.IContentHan
         Intent i = new Intent(this, NotificationActivity.class);
         i.putExtra("WIFIS",getKnownWifi());
         startActivityForResult(i,NOTIFICATION_ACTIVITY);
-        //ActionService.startActionNotification(this,"Hello :)");
     }
 
 
