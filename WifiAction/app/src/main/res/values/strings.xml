@@ -10,9 +10,18 @@
     <string name="cb_on_connect">Execute on connect</string>
     <string name="cb_on_leave">Execute on leave</string>
 
-    <!-- Add Notification -->
-    <string name="noti_et_title_hint">Title</string>
-    <string name="noti_et_message_hint">Message in the Notification</string>
-    <string name="notei_bn_add">Add Notification</string>
+    <!-- Add Action -->
+    <string-array name="action_type">
+        <item value="1">Send SMS</item>
+        <item value="2">Change Bluetooth state</item>
+        <item value="3">Change GPS state</item>
+        <item value="4">Show Notification</item>
+    </string-array>
+    <string name="act_et_title_hint">Title</string>
+    <string name="act_et_message_hint">Message in the Notification</string>
+    <string name="act_et_number_hint">Number</string>
+    <string name="act_et_sms_hint">Message in the SMS</string>
+    <string name="act_bn_add">Add Notification</string>
+    <string name="act_sw_onoff">On/Off</string>
 
 </resources>

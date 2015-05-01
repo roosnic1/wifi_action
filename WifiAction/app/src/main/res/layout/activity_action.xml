@@ -6,12 +6,18 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="com.koki.app.wifiaction.ActionActivity">
 
+    <Spinner
+        android:id="@+id/spActionType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <EditText
         android:id="@+id/etTitle"
+        android:layout_below="@id/spActionType"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:singleLine="true"
-        android:hint="@string/noti_et_title_hint"/>
+        android:hint="@string/act_et_title_hint"/>
 
     <Spinner
         android:id="@+id/spWifis"
@@ -33,18 +39,35 @@
         android:layout_height="wrap_content"
         android:text="@string/cb_on_leave"/>
 
+
+    <!--- Depending on the action widgets -->
+
     <EditText
-        android:id="@+id/etMessage"
+        android:id="@+id/etMessage1"
         android:layout_below="@id/cbOnLeave"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/noti_et_message_hint"/>
+        android:hint="@string/act_et_message_hint"/>
+
+    <EditText
+        android:id="@+id/etMessage2"
+        android:layout_below="@id/etMessage1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/act_et_message_hint"/>
+
+    <Switch
+        android:id="@+id/swBoolean"
+        android:layout_below="@id/etMessage2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/act_sw_onoff"/>
 
     <Button
         android:id="@+id/bnAdd"
-        android:layout_below="@id/etMessage"
+        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/notei_bn_add"/>
+        android:text="@string/act_bn_add"/>
 
 </RelativeLayout>

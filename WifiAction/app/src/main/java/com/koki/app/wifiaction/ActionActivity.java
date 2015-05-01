@@ -4,59 +4,71 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 
-import com.koki.app.wifiaction.R;
 import com.koki.app.wifiaction.model.ActionType;
 import com.koki.app.wifiaction.model.Wifi;
 import com.koki.app.wifiaction.model.Action;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class ActionActivity extends Activity {
 
+    private Spinner spActionType;
     private Spinner spWifis;
     private CheckBox cbOnConnect;
     private CheckBox cbOnLeave;
-    private EditText etMessage;
+    private EditText etMessage1;
+    private EditText etMessage2;
     private EditText etTitle;
+    private Switch swBoolean;
     private Button bnAdd;
 
     private ArrayList<Wifi> wifis;
+    private ArrayAdapter actionAdapter;
+    private int mActionType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_notification);
+        setContentView(R.layout.activity_action);
 
         //Get Widgets
+        spActionType = (Spinner)findViewById(R.id.spActionType);
         spWifis = (Spinner)findViewById(R.id.spWifis);
         cbOnConnect = (CheckBox)findViewById(R.id.cbOnConnect);
         cbOnLeave = (CheckBox)findViewById(R.id.cbOnLeave);
-        etMessage = (EditText)findViewById(R.id.etMessage);
+        etMessage1 = (EditText)findViewById(R.id.etMessage1);
+        etMessage2 = (EditText)findViewById(R.id.etMessage2);
         etTitle = (EditText)findViewById(R.id.etTitle);
+        swBoolean = (Switch)findViewById(R.id.swBoolean);
         bnAdd = (Button)findViewById(R.id.bnAdd);
 
         //Call setups
 
         if(savedInstanceState == null) {
             wifis = (ArrayList<Wifi>) getIntent().getExtras().getSerializable("WIFIS");
+            mActionType = getIntent().getExtras().getInt("ACTIONTYPE");
         } else {
             wifis = (ArrayList<Wifi>) savedInstanceState.getSerializable("WIFIS");
+            mActionType = savedInstanceState.getInt("ACTIONTYPE");
         }
 
         if(wifis != null) {
+            setupSpActionType();
             setupSpWifis();
             setupButton();
         } else {
@@ -70,6 +82,7 @@ public class ActionActivity extends Activity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable("WIFIS", wifis);
+        outState.putInt("ACTIONTYPE", mActionType);
     }
 
     @Override
@@ -94,11 +107,52 @@ public class ActionActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    private  void setupSpActionType() {
+        actionAdapter = ArrayAdapter.createFromResource(this,R.array.action_type,android.R.layout.simple_spinner_dropdown_item);
+        spActionType.setAdapter(actionAdapter);
+        spActionType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                switch (position) {
+                    case 0:
+                        etMessage1.setVisibility(View.VISIBLE);
+                        etMessage2.setVisibility(View.VISIBLE);
+                        swBoolean.setVisibility(View.GONE);
+                        etMessage1.setHint(R.string.act_et_number_hint);
+                        etMessage2.setHint(R.string.act_et_sms_hint);
+                        break;
+                    case 1:
+                        etMessage1.setVisibility(View.GONE);
+                        etMessage2.setVisibility(View.GONE);
+                        swBoolean.setVisibility(View.VISIBLE);
+                        break;
+                    case 2:
+                        etMessage1.setVisibility(View.GONE);
+                        etMessage2.setVisibility(View.GONE);
+                        swBoolean.setVisibility(View.VISIBLE);
+                        break;
+                    case 3:
+                        etMessage1.setVisibility(View.VISIBLE);
+                        etMessage2.setVisibility(View.GONE);
+                        swBoolean.setVisibility(View.GONE);
+                        etMessage1.setHint(R.string.act_et_message_hint);
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
 
     private void setupSpWifis() {
         WifiAdapter wifiAdapter = new WifiAdapter(this,R.layout.spinneritem_wifi,wifis);
         spWifis.setAdapter(wifiAdapter);
     }
+
 
     private void setupButton() {
         bnAdd.setOnClickListener(new View.OnClickListener() {
@@ -118,13 +172,13 @@ public class ActionActivity extends Activity {
         } else if(etTitle.getText().length() == 0) {
             //Todo: Toast
             return;
-        } else if(etMessage.getText().length() == 0) {
+        } else if(etMessage1.getText().length() == 0) {
             //Todo: Toast
             return;
         }
 
         Action a = new Action(etTitle.getText().toString(),((Wifi)spWifis.getSelectedItem()).getSsid(), ActionType.NOTIFICATION,cbOnConnect.isChecked(),cbOnLeave.isChecked());
-        a.setStringParam1(etMessage.getText().toString());
+        a.setStringParam1(etMessage1.getText().toString());
         Intent i = new Intent();
         i.putExtra("ACTION",a);
         setResult(RESULT_OK, i);
