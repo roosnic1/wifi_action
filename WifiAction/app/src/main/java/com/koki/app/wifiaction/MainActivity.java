@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.koki.app.wifiaction.add.NotificationActivity;
 import com.koki.app.wifiaction.model.Action;
 import com.koki.app.wifiaction.model.Wifi;
 
@@ -24,6 +25,10 @@ import java.util.List;
 public class MainActivity extends Activity implements ContentHandler.IContentHandlerCallback{
 
     private static final String TAG = "MainActivity";
+
+    private static final int NOTIFICATION_ACTIVITY = 1;
+
+
 
     private ContentHandler mContentHandler;
     private ArrayList<Action> mActionList;
@@ -44,11 +49,27 @@ public class MainActivity extends Activity implements ContentHandler.IContentHan
             }
         });
         loadActionList();
-        getKnownWifi();
+        //getKnownWifi();
     }
 
     private void startNotifiycation() {
-        ActionService.startActionNotification(this,"Hello :)");
+        Intent i = new Intent(this, NotificationActivity.class);
+        i.putExtra("WIFIS",getKnownWifi());
+        startActivityForResult(i,NOTIFICATION_ACTIVITY);
+        //ActionService.startActionNotification(this,"Hello :)");
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //super.onActivityResult(requestCode, resultCode, data);
+
+        switch(requestCode) {
+            case NOTIFICATION_ACTIVITY:
+                if(resultCode == RESULT_OK) {
+                    Log.i("MA","Result OK");
+                }
+        }
     }
 
     private ArrayList<Wifi> getKnownWifi() {

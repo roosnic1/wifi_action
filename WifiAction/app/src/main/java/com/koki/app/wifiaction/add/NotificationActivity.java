@@ -146,8 +146,22 @@ public class NotificationActivity extends Activity {
                 convertView = inflater.inflate(mResourceId,null);
             }
 
-            TextView tvWifiName = (TextView) convertView.findViewById(R.id.tvWifiName);
-            tvWifiName.setText(mWifi.get(position).getSsid());
+            //TextView tvWifiName = (TextView) convertView.findViewById(R.id.tvWifiName);
+            ((TextView)convertView).setText("Wifi: " + mWifi.get(position).getSsid());
+
+            return convertView;
+        }
+
+        @Override
+        public View getDropDownView(int position, View convertView, ViewGroup parent) {
+            //return super.getDropDownView(position, convertView, parent);
+            if(convertView == null) {
+                LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                convertView = inflater.inflate(mResourceId,null);
+            }
+
+            //TextView tvWifiName = (TextView) convertView.findViewById(R.id.tvWifiName);
+            ((TextView)convertView).setText(mWifi.get(position).getSsid());
 
             return convertView;
         }

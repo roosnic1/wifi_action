@@ -1,19 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tvWifiName"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <TextView
-        android:id="@+id/tvWifiActive"
-        android:layout_width="40dp"
-        android:layout_height="match_parent"
-        android:text="Wifi Active"/>
-
-    <TextView
-        android:id="@+id/tvWifiName"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="wifi_name"/>
-
-</LinearLayout>
+    android:layout_height="wrap_content"
+    android:text="Wifi Active"/>
