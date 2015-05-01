@@ -11,7 +11,7 @@
     <string name="cb_on_leave">Execute on leave</string>
 
     <!-- Add Notification -->
-    <string name="noti_title">Add a new Notification</string>
+    <string name="noti_et_title_hint">Title</string>
     <string name="noti_et_message_hint">Message in the Notification</string>
     <string name="notei_bn_add">Add Notification</string>
 

@@ -30,6 +30,7 @@ public class NotificationActivity extends Activity {
     private CheckBox cbOnConnect;
     private CheckBox cbOnLeave;
     private EditText etMessage;
+    private EditText etTitle;
     private Button bnAdd;
 
     private ArrayList<Wifi> wifis;
@@ -44,6 +45,7 @@ public class NotificationActivity extends Activity {
         cbOnConnect = (CheckBox)findViewById(R.id.cbOnConnect);
         cbOnLeave = (CheckBox)findViewById(R.id.cbOnLeave);
         etMessage = (EditText)findViewById(R.id.etMessage);
+        etTitle = (EditText)findViewById(R.id.etTitle);
         bnAdd = (Button)findViewById(R.id.bnAdd);
 
         //Call setups
