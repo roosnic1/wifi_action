@@ -61,7 +61,7 @@ public class ActionActivity extends Activity {
 
         if(savedInstanceState == null) {
             wifis = (ArrayList<Wifi>) getIntent().getExtras().getSerializable("WIFIS");
-            mActionType = getIntent().getExtras().getInt("ACTIONTYPE");
+            mActionType = 0;
         } else {
             wifis = (ArrayList<Wifi>) savedInstanceState.getSerializable("WIFIS");
             mActionType = savedInstanceState.getInt("ACTIONTYPE");
@@ -113,6 +113,7 @@ public class ActionActivity extends Activity {
         spActionType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                mActionType = position;
                 switch (position) {
                     case 0:
                         etMessage1.setVisibility(View.VISIBLE);
@@ -170,15 +171,20 @@ public class ActionActivity extends Activity {
             //TODO: Toast
             return;
         } else if(etTitle.getText().length() == 0) {
-            //Todo: Toast
+            //TODO: Toast
             return;
-        } else if(etMessage1.getText().length() == 0) {
-            //Todo: Toast
+        } else if(mActionType == 3 && etMessage1.getText().length() == 0) {
+            //TODO: Toast
+            return;
+        } else if(mActionType == 0 && (etMessage1.getText().length() == 0 || etMessage2.getText().length() ==0)) {
+            //TODO: Toast
             return;
         }
 
         Action a = new Action(etTitle.getText().toString(),((Wifi)spWifis.getSelectedItem()).getSsid(), ActionType.NOTIFICATION,cbOnConnect.isChecked(),cbOnLeave.isChecked());
         a.setStringParam1(etMessage1.getText().toString());
+        a.setStringParam2(etMessage2.getText().toString());
+        a.setBooleanParam1(swBoolean.isChecked());
         Intent i = new Intent();
         i.putExtra("ACTION",a);
         setResult(RESULT_OK, i);
