@@ -191,9 +191,6 @@ public class ActionActivity extends Activity {
         finish();
     }
 
-
-
-
     /* ArrayAdapter for Wifi spinner */
     private class WifiAdapter extends ArrayAdapter<Wifi> {
 
