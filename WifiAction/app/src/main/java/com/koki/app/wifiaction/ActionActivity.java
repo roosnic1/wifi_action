@@ -180,8 +180,21 @@ public class ActionActivity extends Activity {
             //TODO: Toast
             return;
         }
+        ActionType at = ActionType.SMS;
+        switch(mActionType) {
+            case 1:
+                at = ActionType.BLUETOOTH;
+                break;
+            case 2:
+                at = ActionType.GPS;
+                break;
+            case 3:
+                at = ActionType.NOTIFICATION;
+                break;
 
-        Action a = new Action(etTitle.getText().toString(),((Wifi)spWifis.getSelectedItem()).getSsid(), ActionType.NOTIFICATION,cbOnConnect.isChecked(),cbOnLeave.isChecked());
+        }
+
+        Action a = new Action(etTitle.getText().toString(),((Wifi)spWifis.getSelectedItem()).getSsid(), at,cbOnConnect.isChecked(),cbOnLeave.isChecked());
         a.setStringParam1(etMessage1.getText().toString());
         a.setStringParam2(etMessage2.getText().toString());
         a.setBooleanParam1(swBoolean.isChecked());
