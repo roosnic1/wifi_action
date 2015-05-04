@@ -19,7 +19,7 @@ import java.util.ArrayList;
  */
 public class ContentHandler {
     private static final String TAG = "ContentHandler";
-    private static final String FILE = "com.koki.app.wifiaction.actionlist";
+    public static final String FILE = "com.koki.app.wifiaction.actionlist";
 
     private Context mContext;
     private IContentHandlerCallback mCallback;
