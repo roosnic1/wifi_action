@@ -37,9 +37,12 @@ public class MainActivity extends Activity implements ContentHandler.IContentHan
 
     private ListView lvActions;
 
+    private Context mContext;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mContext = this;
         setContentView(R.layout.activity_main);
 
         Button btnNotifiy = (Button) findViewById(R.id.btnNotify);
@@ -48,6 +51,13 @@ public class MainActivity extends Activity implements ContentHandler.IContentHan
             @Override
             public void onClick(View v) {
                 startNotifiycation();
+            }
+        });
+        Button btnFire = (Button) findViewById(R.id.btnCallItent);
+        btnFire.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ActionService.startAction(mContext,"\"WN-BCYNTQ\"",true);
             }
         });
         if(savedInstanceState == null) {
@@ -92,6 +102,7 @@ public class MainActivity extends Activity implements ContentHandler.IContentHan
     }
 
     private ArrayList<Wifi> getKnownWifi() {
+        //TODO: Check if wifi is enabled otherwise notify and kill APP -> Get this into the Doc
         WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         List<WifiConfiguration> wifis = wifi.getConfiguredNetworks();
         ArrayList<Wifi> wifiList = new ArrayList<>();
