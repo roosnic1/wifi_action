@@ -3,11 +3,16 @@ package com.koki.app.wifiaction;
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.content.Context;
+import android.telephony.SmsManager;
 import android.util.Log;
 
 import com.koki.app.wifiaction.model.Action;
+import com.koki.app.wifiaction.receiver.SmsDeliveredReceiver;
+import com.koki.app.wifiaction.receiver.SmsSentReceiver;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -95,17 +100,37 @@ public class ActionService extends IntentService {
 
 
     private void handleActionSMS(String param1, String param2) {
-        // TODO: Handle action Foo
-        throw new UnsupportedOperationException("Not yet implemented");
+        try {
+            SmsManager sms = SmsManager.getDefault();
+            PendingIntent sentPI = PendingIntent.getBroadcast(this, 0, new Intent(this, SmsSentReceiver.class), 0);
+            PendingIntent deliveredPI = PendingIntent.getBroadcast(this,0,new Intent(this, SmsDeliveredReceiver.class),0);
+            sms.sendTextMessage(param1,null,param2,sentPI,deliveredPI);
+        } catch(Exception e) {
+            e.printStackTrace();
+            Log.i("AS","Handle Action SMS failed");
+        }
+
     }
 
 
     private void handleActionBluetooth(boolean param1) {
-        // TODO: Handle action Baz
-        throw new UnsupportedOperationException("Not yet implemented");
+        try {
+            BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+            Log.i("AS","Bluetooth is: " + bluetoothAdapter.isEnabled());
+            if(param1) {
+                bluetoothAdapter.enable();
+            } else {
+                bluetoothAdapter.disable();
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+            Log.i("AS","Handle Action Bluetooth failed");
+        }
+
     }
 
     private void handleActionGPS(boolean param1) {
+        //TODO: has to use INTENTS
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
