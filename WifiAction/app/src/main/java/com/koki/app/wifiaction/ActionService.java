@@ -137,6 +137,10 @@ public class ActionService extends IntentService {
     private void handleActionNotification(String param1) {
         Notification.Builder mBuilder = new Notification.Builder(this);
         mBuilder.setSmallIcon(R.mipmap.ic_launcher).setContentTitle("Wifi Action").setContentText(param1);
+        mBuilder.setAutoCancel(true);
+        PendingIntent startPI = PendingIntent.getActivity(this,0,new Intent(this,MainActivity.class),0);
+        mBuilder.setContentIntent(startPI);
+
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(NOTIFICATION_ID,mBuilder.build());
     }
