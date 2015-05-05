@@ -49,12 +49,40 @@
         android:layout_height="wrap_content"
         android:hint="@string/act_et_message_hint"/>
 
+    <LinearLayout
+        android:id="@+id/llNumberInput"
+        android:layout_below="@id/cbOnLeave"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="1.0">
+
+        <EditText
+            android:id="@+id/etMessage3"
+            android:layout_width="0dip"
+            android:layout_weight="0.9"
+            android:layout_height="wrap_content"
+            android:hint="@string/act_et_number_hint"/>
+
+
+        <ImageButton
+            android:id="@+id/bnContact"
+            android:layout_width="0dip"
+            android:layout_weight="0.1"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_action_account_box"/>
+
+
+
+    </LinearLayout>
+
     <EditText
         android:id="@+id/etMessage2"
         android:layout_below="@id/etMessage1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/act_et_message_hint"/>
+
 
     <Switch
         android:id="@+id/swBoolean"

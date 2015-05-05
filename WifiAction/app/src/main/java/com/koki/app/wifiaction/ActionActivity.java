@@ -3,7 +3,10 @@ package com.koki.app.wifiaction;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,6 +18,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -27,15 +32,20 @@ import java.util.ArrayList;
 
 public class ActionActivity extends Activity {
 
+    private final static int REQUEST_CONTACTPICKER = 42;
+
     private Spinner spActionType;
     private Spinner spWifis;
     private CheckBox cbOnConnect;
     private CheckBox cbOnLeave;
     private EditText etMessage1;
     private EditText etMessage2;
+    private EditText etMessage3;
     private EditText etTitle;
     private Switch swBoolean;
     private Button bnAdd;
+    private ImageButton bnContact;
+    private LinearLayout llNumberInput;
 
     private ArrayList<Wifi> wifis;
     private ArrayAdapter actionAdapter;
@@ -53,9 +63,12 @@ public class ActionActivity extends Activity {
         cbOnLeave = (CheckBox)findViewById(R.id.cbOnLeave);
         etMessage1 = (EditText)findViewById(R.id.etMessage1);
         etMessage2 = (EditText)findViewById(R.id.etMessage2);
+        etMessage3 = (EditText)findViewById(R.id.etMessage3);
         etTitle = (EditText)findViewById(R.id.etTitle);
         swBoolean = (Switch)findViewById(R.id.swBoolean);
         bnAdd = (Button)findViewById(R.id.bnAdd);
+        bnContact = (ImageButton)findViewById(R.id.bnContact);
+        llNumberInput = (LinearLayout)findViewById(R.id.llNumberInput);
 
         //Call setups
 
@@ -116,26 +129,29 @@ public class ActionActivity extends Activity {
                 mActionType = position;
                 switch (position) {
                     case 0:
-                        etMessage1.setVisibility(View.VISIBLE);
+                        etMessage1.setVisibility(View.INVISIBLE);
                         etMessage2.setVisibility(View.VISIBLE);
                         swBoolean.setVisibility(View.GONE);
-                        etMessage1.setHint(R.string.act_et_number_hint);
+                        llNumberInput.setVisibility(View.VISIBLE);
                         etMessage2.setHint(R.string.act_et_sms_hint);
                         break;
                     case 1:
                         etMessage1.setVisibility(View.GONE);
                         etMessage2.setVisibility(View.GONE);
                         swBoolean.setVisibility(View.VISIBLE);
+                        llNumberInput.setVisibility(View.GONE);
                         break;
                     case 2:
                         etMessage1.setVisibility(View.GONE);
                         etMessage2.setVisibility(View.GONE);
                         swBoolean.setVisibility(View.VISIBLE);
+                        llNumberInput.setVisibility(View.GONE);
                         break;
                     case 3:
                         etMessage1.setVisibility(View.VISIBLE);
                         etMessage2.setVisibility(View.GONE);
                         swBoolean.setVisibility(View.GONE);
+                        llNumberInput.setVisibility(View.GONE);
                         etMessage1.setHint(R.string.act_et_message_hint);
                         break;
                 }
@@ -162,6 +178,14 @@ public class ActionActivity extends Activity {
                 validateAndReturnAction();
             }
         });
+        bnContact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(Intent.ACTION_PICK, ContactsContract.CommonDataKinds.Phone.CONTENT_URI);
+                startActivityForResult(i,REQUEST_CONTACTPICKER);
+            }
+        });
+
     }
 
 
@@ -176,7 +200,7 @@ public class ActionActivity extends Activity {
         } else if(mActionType == 3 && etMessage1.getText().length() == 0) {
             //TODO: Toast
             return;
-        } else if(mActionType == 0 && (etMessage1.getText().length() == 0 || etMessage2.getText().length() ==0)) {
+        } else if(mActionType == 0 && (etMessage3.getText().length() == 0 || etMessage2.getText().length() ==0)) {
             //TODO: Toast
             return;
         }
@@ -195,13 +219,35 @@ public class ActionActivity extends Activity {
         }
 
         Action a = new Action(etTitle.getText().toString(),((Wifi)spWifis.getSelectedItem()).getSsid(), at,cbOnConnect.isChecked(),cbOnLeave.isChecked());
-        a.setStringParam1(etMessage1.getText().toString());
+        if(mActionType == 0) {
+            a.setStringParam1(etMessage3.getText().toString());
+        } else {
+            a.setStringParam1(etMessage1.getText().toString());
+        }
         a.setStringParam2(etMessage2.getText().toString());
         a.setBooleanParam1(swBoolean.isChecked());
         Intent i = new Intent();
         i.putExtra("ACTION",a);
         setResult(RESULT_OK, i);
         finish();
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch(requestCode) {
+            case REQUEST_CONTACTPICKER:
+                if(resultCode == RESULT_OK) {
+                    Uri contentUri = data.getData();
+                    Cursor cursor = getContentResolver().query(contentUri, null, null, null, null);
+                    cursor.moveToFirst();
+                    String number = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                    if(number.length() > 0) {
+                        etMessage3.setText(number);
+                    }
+                }
+        }
     }
 
     /* ArrayAdapter for Wifi spinner */
