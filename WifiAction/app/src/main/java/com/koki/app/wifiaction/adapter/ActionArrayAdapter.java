@@ -62,7 +62,20 @@ public class ActionArrayAdapter extends ArrayAdapter<Action> {
         holder.actionTitle.setText(action.getTitle());
         holder.actionWifi.setText(action.getSsid());
 
+        switch(action.getActionType()) {
+            case SMS:
+                holder.actionImage.setImageResource(R.drawable.action_message);
+                break;
+            case BLUETOOTH:
+                holder.actionImage.setImageResource(R.drawable.action_bluetooth);
+                break;
+            case GPS:
+                holder.actionImage.setImageResource(R.drawable.action_gps);
+                break;
+            case NOTIFICATION:
+                holder.actionImage.setImageResource(R.drawable.action_notification);
+                break;
+        }
         return convertView;
-
     }
 }
