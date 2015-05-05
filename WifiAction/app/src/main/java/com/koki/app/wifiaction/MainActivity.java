@@ -7,13 +7,22 @@ import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.SparseBooleanArray;
+import android.view.ActionMode;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
+import com.koki.app.wifiaction.adapter.ActionArrayAdapter;
 import com.koki.app.wifiaction.model.Action;
 import com.koki.app.wifiaction.model.Wifi;
 
@@ -36,6 +45,7 @@ public class MainActivity extends Activity implements ContentHandler.IContentHan
     private ArrayList<Action> mActionList;
 
     private ListView lvActions;
+    private ActionArrayAdapter actionAdapter;
 
     private Context mContext;
 
@@ -57,16 +67,18 @@ public class MainActivity extends Activity implements ContentHandler.IContentHan
         btnFire.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ActionService.startAction(mContext,"\"WN-BCYNTQ\"",true);
+                ActionService.startAction(mContext, "\"WN-BCYNTQ\"", true);
             }
         });
+        setupActionList();
         if(savedInstanceState == null) {
             loadActionList();
         } else {
-            mActionList = (ArrayList<Action>) savedInstanceState.getSerializable("ACTIONLIST");
+            mActionList.addAll((ArrayList<Action>) savedInstanceState.getSerializable("ACTIONLIST"));
+            actionAdapter.notifyDataSetChanged();
         }
 
-        setupActionList();
+
     }
 
     @Override
@@ -75,26 +87,23 @@ public class MainActivity extends Activity implements ContentHandler.IContentHan
         outState.putSerializable("ACTIONLIST", mActionList);
     }
 
+
     private void startNotifiycation() {
         Intent i = new Intent(this, ActionActivity.class);
-        i.putExtra("WIFIS",getKnownWifi());
+        i.putExtra("WIFIS", getKnownWifi());
         startActivityForResult(i, ACTION_NOTIFICATION);
     }
 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        //super.onActivityResult(requestCode, resultCode, data);
-
         switch(requestCode) {
             case ACTION_NOTIFICATION:
                 if(resultCode == RESULT_OK) {
-                    Log.i("MA", "Result OK");
                     Action a = (Action) data.getSerializableExtra("ACTION");
                     mActionList.add(a);
-                    saveActionList(); //TODO Implement observer for save
-                    setupActionList(); //TODO Implement observer for setupactionlist
-                    Log.i("MA", "Action Title: " + a.getTitle());
+                    actionAdapter.notifyDataSetChanged();
+                    saveActionList();
                 } else {
                     Log.i("MA","Result: " + resultCode);
                 }
@@ -115,12 +124,52 @@ public class MainActivity extends Activity implements ContentHandler.IContentHan
 
 
     private void setupActionList() {
-        if(mActionList == null) {
-            return;
-        }
-
-        ArrayAdapter<Action> actionAdapter = new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,mActionList);
+        mActionList = new ArrayList<>();
+        actionAdapter = new ActionArrayAdapter(this,R.layout.listitem_action,mActionList);
         lvActions.setAdapter(actionAdapter);
+        lvActions.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+        lvActions.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
+            @Override
+            public void onItemCheckedStateChanged(ActionMode actionMode, int i, long l, boolean b) {
+
+            }
+
+            @Override
+            public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
+                MenuInflater inflater = actionMode.getMenuInflater();
+                inflater.inflate(R.menu.menu_con_listview,menu);
+                return true;
+            }
+
+            @Override
+            public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
+                return false;
+            }
+
+            @Override
+            public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
+                switch(menuItem.getItemId()) {
+                    case R.id.action_delete:
+                        SparseBooleanArray positions = lvActions.getCheckedItemPositions();
+                        for(int i=lvActions.getCount()-1;i>=0;i--) {
+                            if(positions.get(i)) {
+                                mActionList.remove(i);
+                            }
+                        }
+                        actionAdapter.notifyDataSetChanged();
+                        saveActionList();
+                        actionMode.finish();
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+
+            @Override
+            public void onDestroyActionMode(ActionMode actionMode) {
+
+            }
+        });
     }
 
     private void loadActionList() {
@@ -132,14 +181,9 @@ public class MainActivity extends Activity implements ContentHandler.IContentHan
 
 
     private void saveActionList() {
-        if(mActionList == null) {
-            return;
-        }
-
         if(mContentHandler == null) {
             mContentHandler  = new ContentHandler(this,this);
         }
-
         mContentHandler.startSavingActionList(mActionList);
     }
 
@@ -168,10 +212,9 @@ public class MainActivity extends Activity implements ContentHandler.IContentHan
 
     @Override
     public void onContentLoaded(ArrayList<Action> actionList) {
-        mActionList = actionList;
-        Log.i("MA","Loaded Actionlist");
-        setupActionList();
-
+        mActionList.addAll(actionList);
+        actionAdapter.notifyDataSetChanged();
+        Log.i("MA", "Loaded Actionlist");
     }
 
     @Override
@@ -183,6 +226,8 @@ public class MainActivity extends Activity implements ContentHandler.IContentHan
     public void onError(String errorMessage) {
         //TODO: Show Error if critical
         Log.i("MA","Error while loading ActionList");
-        mActionList = new ArrayList<>();
     }
+
+
+
 }
