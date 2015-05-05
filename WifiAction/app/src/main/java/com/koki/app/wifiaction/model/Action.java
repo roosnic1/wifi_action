@@ -103,4 +103,36 @@ public class Action implements Serializable {
                 "When: " + when;
 
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Action action = (Action) o;
+
+        if (onConnect != action.onConnect) return false;
+        if (onLeave != action.onLeave) return false;
+        if (booleanParam1 != action.booleanParam1) return false;
+        if (!title.equals(action.title)) return false;
+        if (!ssid.equals(action.ssid)) return false;
+        if (actionType != action.actionType) return false;
+        if (stringParam1 != null ? !stringParam1.equals(action.stringParam1) : action.stringParam1 != null)
+            return false;
+        return !(stringParam2 != null ? !stringParam2.equals(action.stringParam2) : action.stringParam2 != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = title.hashCode();
+        result = 31 * result + ssid.hashCode();
+        result = 31 * result + actionType.hashCode();
+        result = 31 * result + (onConnect ? 1 : 0);
+        result = 31 * result + (onLeave ? 1 : 0);
+        result = 31 * result + (stringParam1 != null ? stringParam1.hashCode() : 0);
+        result = 31 * result + (stringParam2 != null ? stringParam2.hashCode() : 0);
+        result = 31 * result + (booleanParam1 ? 1 : 0);
+        return result;
+    }
 }
