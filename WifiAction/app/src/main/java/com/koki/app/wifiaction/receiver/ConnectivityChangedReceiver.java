@@ -1,4 +1,4 @@
-package com.koki.app.wifiaction;
+package com.koki.app.wifiaction.receiver;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -7,6 +7,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.IBinder;
 import android.util.Log;
+
+import com.koki.app.wifiaction.ActionService;
 
 public class ConnectivityChangedReceiver extends BroadcastReceiver {
 
@@ -29,7 +31,7 @@ public class ConnectivityChangedReceiver extends BroadcastReceiver {
                 //Log.i(TAG,"Already got it");
             } else if (networkInfo.getTypeName().equals("WIFI") && !networkInfo.getExtraInfo().equals(mCurrentWifi)) {
                 Log.i(TAG,"Changed to new WIFI: " + networkInfo.getExtraInfo());
-                ActionService.startAction(context,networkInfo.getExtraInfo(),true);
+                ActionService.startAction(context, networkInfo.getExtraInfo(), true);
                 mCurrentWifi = networkInfo.getExtraInfo();
                 mCurrentState = networkInfo.getTypeName();
             } else if(mCurrentState.equals("WIFI") && !networkInfo.getTypeName().equals("WIFI")) {

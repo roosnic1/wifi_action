@@ -24,7 +24,7 @@
         </activity>
 
         <receiver
-            android:name=".ConnectivityChangedReceiver"
+            android:name=".receiver.ConnectivityChangedReceiver"
             android:enabled="true"
             android:exported="true" >
             <intent-filter>
