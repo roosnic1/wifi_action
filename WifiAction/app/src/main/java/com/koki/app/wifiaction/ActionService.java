@@ -11,6 +11,7 @@ import android.telephony.SmsManager;
 import android.util.Log;
 
 import com.koki.app.wifiaction.model.Action;
+import com.koki.app.wifiaction.model.LogEntry;
 import com.koki.app.wifiaction.receiver.SmsDeliveredReceiver;
 import com.koki.app.wifiaction.receiver.SmsSentReceiver;
 
@@ -19,6 +20,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
+import java.util.Date;
+
+import io.realm.Realm;
 
 
 public class ActionService extends IntentService {
@@ -53,7 +57,8 @@ public class ActionService extends IntentService {
         if (intent != null) {
             String wifi = intent.getStringExtra(EXTRA_WIFI);
             boolean isCon = intent.getBooleanExtra(EXTRA_ISCON,true);
-            Log.i("AS","onHandleIntent with Wifi: " +  wifi);
+            //Log.i("AS","onHandleIntent with Wifi: " +  wifi);
+            writeLog("WIFI CHANGE",wifi,isCon);
             ArrayList<Action> aList = loadFile();
             for(int i=0;i<aList.size();i++) {
                 Action a = aList.get(i);
@@ -72,7 +77,27 @@ public class ActionService extends IntentService {
                             handleActionSMS(a.getStringParam1(),a.getStringParam2());
                             break;
                     }
+                    writeLog(a.getTitle(),wifi,isCon);
                 }
+            }
+        }
+    }
+
+
+    private void writeLog(String actionName, String wifiSsid, boolean onConnect) {
+        Realm realm = null;
+        try {
+            realm = Realm.getInstance(this);
+            realm.beginTransaction();
+            LogEntry logEntry = realm.createObject(LogEntry.class);
+            logEntry.setActionName(actionName);
+            logEntry.setWifiSsid(wifiSsid);
+            logEntry.setOnConnect(onConnect);
+            logEntry.setDate(new Date());
+            realm.commitTransaction();
+        } finally {
+            if(realm != null) {
+                realm.close();
             }
         }
     }
@@ -87,12 +112,12 @@ public class ActionService extends IntentService {
             ois.close();
         } catch(FileNotFoundException e) {
             //e.printStackTrace();
-            Log.i(TAG,"File not Found... (Not critical)");
+            Log.i(TAG, "File not Found... (Not critical)");
             actionList = new ArrayList<>();
         } catch(IOException | ClassNotFoundException e) {
             e.printStackTrace();
             //TODO: Implement proper Error handling
-            Log.e(TAG,"Error while loading File: " + ContentHandler.FILE);
+            Log.e(TAG, "Error while loading File: " + ContentHandler.FILE);
         }
 
         return actionList;
@@ -107,7 +132,7 @@ public class ActionService extends IntentService {
             sms.sendTextMessage(param1,null,param2,sentPI,deliveredPI);
         } catch(Exception e) {
             e.printStackTrace();
-            Log.i("AS","Handle Action SMS failed");
+            Log.i("AS", "Handle Action SMS failed");
         }
 
     }
@@ -116,7 +141,7 @@ public class ActionService extends IntentService {
     private void handleActionBluetooth(boolean param1) {
         try {
             BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-            Log.i("AS","Bluetooth is: " + bluetoothAdapter.isEnabled());
+            Log.i("AS", "Bluetooth is: " + bluetoothAdapter.isEnabled());
             if(param1) {
                 bluetoothAdapter.enable();
             } else {
@@ -124,7 +149,7 @@ public class ActionService extends IntentService {
             }
         } catch(Exception e) {
             e.printStackTrace();
-            Log.i("AS","Handle Action Bluetooth failed");
+            Log.i("AS", "Handle Action Bluetooth failed");
         }
 
     }
