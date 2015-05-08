@@ -67,7 +67,9 @@ public class MainActivity extends Activity implements ContentHandler.IContentHan
         btnFire.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ActionService.startAction(mContext, "\"WN-BCYNTQ\"", true);
+                Intent i = new Intent(mContext,LogActivity.class);
+                startActivity(i);
+                //ActionService.startAction(mContext, "\"WN-BCYNTQ\"", true);
             }
         });
         setupActionList();
