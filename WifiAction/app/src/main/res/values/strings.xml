@@ -25,4 +25,8 @@
     <string name="act_bn_add">Save</string>
     <string name="act_sw_onoff">On/Off</string>
 
+
+    <!-- Logs -->
+    <string name="title_activity_log">Logs</string>
+
 </resources>

@@ -40,6 +40,11 @@
         <activity
             android:name=".ActionActivity"
             android:label="@string/title_activity_notification"
+            android:parentActivityName=".MainActivity" >
+        </activity>
+        <activity
+            android:name=".LogActivity"
+            android:label="@string/title_activity_log"
             android:parentActivityName=".MainActivity">
         </activity>
     </application>
