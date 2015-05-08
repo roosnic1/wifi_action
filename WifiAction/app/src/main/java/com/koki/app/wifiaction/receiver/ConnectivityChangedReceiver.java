@@ -27,6 +27,7 @@ public class ConnectivityChangedReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        //TODO: Try/Catch
         SharedPreferences sharedPreferences = context.getSharedPreferences("com.koki.app.wifiaction",Context.MODE_PRIVATE);
         String currentWifi = sharedPreferences.getString(CW,"");
         String currentState = sharedPreferences.getString(CS,"");
@@ -39,14 +40,10 @@ public class ConnectivityChangedReceiver extends BroadcastReceiver {
                 Log.i(TAG, "Changed to new WIFI: " + networkInfo.getExtraInfo());
                 ActionService.startAction(context, networkInfo.getExtraInfo(), true);
                 sharedPreferences.edit().putString(CW, networkInfo.getExtraInfo()).putString(CS,networkInfo.getTypeName()).commit();
-                //mCurrentWifi = networkInfo.getExtraInfo();
-                //mCurrentState = networkInfo.getTypeName();
             } else if(currentState.equals("WIFI") && !networkInfo.getTypeName().equals("WIFI")) {
                 Log.i(TAG,"Left WIFI: " + currentWifi);
                 ActionService.startAction(context, currentWifi, false);
                 sharedPreferences.edit().putString(CW,networkInfo.getExtraInfo()).putString(CS,networkInfo.getTypeName()).commit();
-                //mCurrentWifi = networkInfo.getExtraInfo();
-                //mCurrentState = networkInfo.getTypeName();
             }
         }
     }
