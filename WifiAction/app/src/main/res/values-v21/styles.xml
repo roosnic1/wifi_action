@@ -11,6 +11,7 @@
 
         <item name="android:textColorPrimary">@color/white</item>
         <item name="android:textColor">@color/brown_almost_dark</item>
+        <item name="android:actionModeBackground">@color/brown</item>
 
         <item name="android:windowBackground">@color/window_back</item>
     </style>

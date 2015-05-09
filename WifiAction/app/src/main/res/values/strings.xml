@@ -11,6 +11,11 @@
     <string name="cb_on_connect">Execute on connect</string>
     <string name="cb_on_leave">Execute on leave</string>
 
+    <plurals name="actions">
+        <item quantity="one">%s Action selected</item>
+        <item quantity="other">%s Actions selected</item>
+    </plurals>
+
     <!-- Add Action -->
     <string-array name="action_type">
         <item value="1">Send SMS</item>

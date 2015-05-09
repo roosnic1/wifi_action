@@ -118,8 +118,17 @@ public class MainActivity extends Activity implements ContentHandler.IContentHan
         lvActions.setAdapter(actionAdapter);
         lvActions.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
         lvActions.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
+
+            private int count;
+
             @Override
             public void onItemCheckedStateChanged(ActionMode actionMode, int i, long l, boolean b) {
+                if(b) {
+                    count += 1;
+                } else {
+                    count -= 1;
+                }
+                actionMode.setTitle(getResources().getQuantityString(R.plurals.actions,count,count));
 
             }
 
@@ -127,6 +136,7 @@ public class MainActivity extends Activity implements ContentHandler.IContentHan
             public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
                 MenuInflater inflater = actionMode.getMenuInflater();
                 inflater.inflate(R.menu.menu_con_listview,menu);
+                count = 0;
                 return true;
             }
 
