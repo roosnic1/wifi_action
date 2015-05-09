@@ -20,6 +20,7 @@ import android.widget.ListView;
 import com.koki.app.wifiaction.adapter.ActionArrayAdapter;
 import com.koki.app.wifiaction.model.Action;
 import com.koki.app.wifiaction.model.Wifi;
+import com.software.shell.fab.ActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,8 +51,8 @@ public class MainActivity extends Activity implements ContentHandler.IContentHan
         mContext = this;
         setContentView(R.layout.activity_main);
 
-        Button btnNotifiy = (Button) findViewById(R.id.btnAddAction);
         lvActions = (ListView) findViewById(R.id.lvActions);
+        ActionButton btnNotifiy = (ActionButton) findViewById(R.id.btnAddAction);
         btnNotifiy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
