@@ -9,6 +9,8 @@ import android.widget.TextView;
 import com.koki.app.wifiaction.R;
 import com.koki.app.wifiaction.model.LogEntry;
 
+import java.text.DateFormat;
+
 import io.realm.RealmBaseAdapter;
 import io.realm.RealmResults;
 
@@ -44,9 +46,14 @@ public class LogsRealmAdapter extends RealmBaseAdapter<LogEntry> implements List
 
 
         LogEntry logEntry = realmResults.get(i);
-        holder.logDate.setText(logEntry.getDate().toString());
+        DateFormat df = DateFormat.getDateTimeInstance();
+        holder.logDate.setText(df.format(logEntry.getDate()));
         holder.actionTitle.setText(logEntry.getActionName());
-        holder.actionWifi.setText(logEntry.getWifiSsid() + " Connected: " + logEntry.isOnConnect());
+        String s = "Connected to ";
+        if(!logEntry.isOnConnect()) {
+            s = "Disconnected from ";
+        }
+        holder.actionWifi.setText(s + logEntry.getWifiSsid());
 
         return convertView;
     }

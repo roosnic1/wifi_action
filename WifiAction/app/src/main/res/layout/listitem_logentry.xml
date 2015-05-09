@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="64dp"
+    android:layout_height="48dp"
     android:weightSum="1.0"
     android:background="@drawable/listitem_selector">
 
@@ -24,7 +24,7 @@
             android:gravity="center_vertical"
             android:id="@+id/tvActionTitle"
             android:layout_width="match_parent"
-            android:layout_height="32dp"
+            android:layout_height="24dp"
             android:textSize="20sp"
             android:textStyle="bold"
             tools:text="Action Title"/>
@@ -33,7 +33,9 @@
             android:gravity="center_vertical"
             android:id="@+id/tvActionWifi"
             android:layout_width="match_parent"
-            android:layout_height="32dp"
+            android:layout_height="24dp"
+            android:singleLine="true"
+            android:ellipsize="end"
             tools:text="Wifi name"/>
 
     </LinearLayout>

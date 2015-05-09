@@ -34,8 +34,9 @@ public class LogActivity extends Activity {
 
     private void setupLogsListView() {
         try {
-            RealmResults<LogEntry> results = realm.where(LogEntry.class).findAll();
-            mLogsRealmAdapter = new LogsRealmAdapter(this,results,true);
+            RealmResults<LogEntry> result = realm.where(LogEntry.class).findAll();
+            result.sort("date",false);
+            mLogsRealmAdapter = new LogsRealmAdapter(this,result,true);
             lvLogs.setAdapter(mLogsRealmAdapter);
         } catch(Exception e) {
             e.printStackTrace();
