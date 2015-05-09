@@ -9,18 +9,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.koki.app.wifiaction.adapter.ActionArrayAdapter;
 import com.koki.app.wifiaction.model.Action;
@@ -55,21 +50,12 @@ public class MainActivity extends Activity implements ContentHandler.IContentHan
         mContext = this;
         setContentView(R.layout.activity_main);
 
-        Button btnNotifiy = (Button) findViewById(R.id.btnNotify);
+        Button btnNotifiy = (Button) findViewById(R.id.btnAddAction);
         lvActions = (ListView) findViewById(R.id.lvActions);
         btnNotifiy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startNotifiycation();
-            }
-        });
-        Button btnFire = (Button) findViewById(R.id.btnCallItent);
-        btnFire.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(mContext,LogActivity.class);
-                startActivity(i);
-                //ActionService.startAction(mContext, "\"WN-BCYNTQ\"", true);
             }
         });
         setupActionList();
@@ -205,7 +191,9 @@ public class MainActivity extends Activity implements ContentHandler.IContentHan
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_logs) {
+            Intent i = new Intent(mContext,LogActivity.class);
+            startActivity(i);
             return true;
         }
 
