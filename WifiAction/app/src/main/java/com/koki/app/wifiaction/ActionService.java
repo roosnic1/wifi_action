@@ -57,7 +57,6 @@ public class ActionService extends IntentService {
         if (intent != null) {
             String wifi = intent.getStringExtra(EXTRA_WIFI);
             boolean isCon = intent.getBooleanExtra(EXTRA_ISCON,true);
-            //Log.i("AS","onHandleIntent with Wifi: " +  wifi);
             writeLog("WIFI CHANGE",wifi,isCon);
             ArrayList<Action> aList = loadFile();
             for(int i=0;i<aList.size();i++) {
