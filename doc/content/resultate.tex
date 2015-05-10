@@ -121,3 +121,37 @@ public void onReceive(Context context, Intent intent) {
 In der Funktion onReceive wird überprüft ob der Verbindungstype gewechselt hat oder ob der Wireles LAN Netzwerkname geändert hat und die Funktion im IntentService mit den entsprechenden Parameter aufgerufen.
 
 \subsection{ActionService}
+Der ActionService erbt vom IntentService und wird beim Aufruf von onHandleIntent in einem eigenen Thread ausgeführt. Zuerst wird die Liste mit den Aktionen aus der Datei, welche die MainActivity schreibt, geladen. Danach wird überprüft ob für das aktuelle Wireless LAN und den Status der Verbindung eine Aktion existiert. Wird eine Aktion gefunden wird sie sogleich ausgeführt. Für jede Ausführung einer Aktion wird ein in der Datenbank ein Log Eintrag erstellt und abgespeichert.
+\begin{lstlisting}[language=Java]
+protected void onHandleIntent(Intent intent) {
+    if (intent != null) {
+        String wifi = intent.getStringExtra(EXTRA_WIFI);
+        boolean isCon = intent.getBooleanExtra(EXTRA_ISCON,true);
+        writeLog("WIFI CHANGE",wifi,isCon);
+        ArrayList<Action> aList = loadFile();
+        for(int i=0;i<aList.size();i++) {
+            Action a = aList.get(i);
+            if(a.getSsid().equals(wifi) && (a.isOnConnect() == isCon || a.isOnLeave() != isCon)) {
+                switch(a.getActionType()) {
+                    case BLUETOOTH:
+                        handleActionBluetooth(a.isBooleanParam1());
+                        break;
+                    case GPS:
+                        handleActionGPS(a.isBooleanParam1());
+                        break;
+                    case NOTIFICATION:
+                        handleActionNotification(a.getStringParam1());
+                        break;
+                    case SMS:
+                        handleActionSMS(a.getStringParam1(),a.getStringParam2());
+                        break;
+                }
+                writeLog(a.getTitle(),wifi,isCon);
+            }
+        }
+    }
+}
+\end{lstlisting}
+
+\section{Restliche Implementationen}
+Die Handhabung der Datenbank wird mit einem neuen Framework namens Realm.io\footnote{Realm.io mobile database \url{http://realm.io/}} gehandhabt. Diese Framework erleichtert das persistente Speichern sowie den Austausch von Daten zwischen verschiedenen Aktivitäten und Threads erheblich.
