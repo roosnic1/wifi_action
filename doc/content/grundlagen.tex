@@ -8,13 +8,17 @@ Ein Wireless LAN ist ein Funknetz welches die Übertragung von Daten von einem E
 \section{Technisch}
 Die Primäre Funktion eines Wireless LAN Access Point ist das erstellen einer Verbindung zwischen 802.11 Wireless LAN und 802.3 Ethernet Datenverkehr. Ein Access Point auch Router genannt sendet in einem Intervall (ca. 10 mal pro Sekunde) seine Verbindungsinformationen an alle Wireless Geräte in seiner Reichweite. Die Informationen bestehen aus folgenden Bestandteilen.
 \begin{itemize}
-\item Der Netzwerkname - Service Set Identifier (SSID)
+\item Der Netzwerkname - SSID
 \item Die Liste der unterstützten Übertragungsraten
 \item Die Art der Verschlüsselung
 \end{itemize}
-Mit diesen Angaben kann ein Wireless Gerät mit dem korrekten Passwort sofern notwendig eine Verbindung mit dem Access Point herstellen. Wireless LAN Access Points operieren auf der Sicherungsschicht (Schicht 2) des OSI Modell. Daher verwenden sie die gleiche Adressierung wie herkömmliche LANs und können auch ohne weiteres mit diesen Kommunizieren.
-
-SSID -BSSID
+Mit diesen Angaben kann ein Wireless Gerät mit dem korrekten Passwort sofern notwendig eine Verbindung mit dem Access Point herstellen. Wireless LAN Access Points operieren auf der Sicherungsschicht (Schicht 2) des OSI Modell. Daher verwenden sie die gleiche Adressierung wie herkömmliche LANs und können auch ohne weiteres mit diesen Kommunizieren. Ein Access Point kann nur innerhalb eines bestimmten Radius Senden und Empfangen. Für ein grösseres Wireless LAN Netzwerk müssen mehrere Access Points verwendet werden. Diese haben dieselbe SSID aber eine eindeutige BSS. In der Abbildung \ref{fig:bssap} wird das Prinzip dargestellt. Mehrere BSS mit derselben SSID sind ein ESS.
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.8\textwidth]{images/bssssid.png}
+	\caption{Jeder Access Point hat eine eigene BSS}
+	\label{fig:bssap}
+\end{figure}
 
 
 \section{Verbreitung}
