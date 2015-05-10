@@ -97,6 +97,7 @@ public class ActionActivity extends Activity {
         outState.putInt("ACTIONTYPE", mActionType);
     }
 
+
     private  void setupSpActionType() {
         actionAdapter = ArrayAdapter.createFromResource(this,R.array.action_type,android.R.layout.simple_spinner_dropdown_item);
         spActionType.setAdapter(actionAdapter);

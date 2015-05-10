@@ -106,8 +106,8 @@ public class ContentHandler {
 
 
     public interface IContentHandlerCallback {
-        public void onContentLoaded(ArrayList<Action> actionList);
-        public void onContentSaved();
-        public void onError(String errorMessage);
+        void onContentLoaded(ArrayList<Action> actionList);
+        void onContentSaved();
+        void onError(String errorMessage);
     }
 }

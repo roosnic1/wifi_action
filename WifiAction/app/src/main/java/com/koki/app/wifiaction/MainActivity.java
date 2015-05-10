@@ -52,20 +52,27 @@ public class MainActivity extends Activity implements ContentHandler.IContentHan
         setContentView(R.layout.activity_main);
 
         lvActions = (ListView) findViewById(R.id.lvActions);
-        ActionButton btnNotifiy = (ActionButton) findViewById(R.id.btnAddAction);
-        btnNotifiy.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.btnAddAction).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startNotifiycation();
+                Intent i = new Intent(mContext, ActionActivity.class);
+                i.putExtra("WIFIS", getKnownWifi());
+                startActivityForResult(i, ACTION_NOTIFICATION);
             }
         });
         setupActionList();
-        if(savedInstanceState == null) {
+        if (savedInstanceState == null) {
             loadActionList();
         } else {
             mActionList.addAll((ArrayList<Action>) savedInstanceState.getSerializable("ACTIONLIST"));
             actionAdapter.notifyDataSetChanged();
         }
+        findViewById(R.id.btnAddAction).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, ActionActivity.class));
+            }
+        });
 
 
     }
@@ -76,12 +83,6 @@ public class MainActivity extends Activity implements ContentHandler.IContentHan
         outState.putSerializable("ACTIONLIST", mActionList);
     }
 
-
-    private void startNotifiycation() {
-        Intent i = new Intent(this, ActionActivity.class);
-        i.putExtra("WIFIS", getKnownWifi());
-        startActivityForResult(i, ACTION_NOTIFICATION);
-    }
 
 
     @Override
