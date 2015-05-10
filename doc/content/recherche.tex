@@ -51,3 +51,6 @@ Ein BroadcastReceiver reagiert auf einen definierten Intent (Aktion) welcher vom
 
 \subsection{IntentService}
 Ein IntentService ist einen Android Komponente welche es erlaubt etwas in einem eigenen Thread auszuführen. Der Main Thread wird dadurch nicht gestört bzw. er wird nicht einmal benötigt, was das Ausführen bei inaktivem Mobiltelefon erlaubt. Weil der IntentService aber zur App gehört, kann auf die gemeinsamen Daten zugegriffen werden. Dadurch ist gewährleistet dass definierte Aktionen vom IntentService ausgeführt werden können.
+
+\subsection{Aktionen/Tasks}
+Die Ausführung der verfügbaren Aktionen wie z.B. das aktivieren bzw. deaktivieren des Bluetooth Statuses muss jeweils einzeln analysiert und umgesetzt werden. Gewisse Aktionen sind mit dem Android Software Developement Kit einfach umzusetzten andere wie das ein oder ausschalten des GPS Moduls nicht möglich. Android verlangt eine bewusste Interaktion des Benutzers wenn es um das verändern des GPS Status geht. Daher werden für diesen Prototypen eine limitierte Anzahl von Aktionen zur Verfügung stehen.
