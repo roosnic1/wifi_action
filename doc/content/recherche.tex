@@ -1,3 +1,28 @@
 %!TEX root = ../doc.tex
 \chapter{Recherche}
 \label{sec:recherche}
+
+\section{Apps}
+Die Recherche im Google Play Store hat ergeben dass einige Apps existieren, welche ähnliche Funktionalität wie die in dieser Arbeit zu entwickelnde App auch anbietet. Im folgenden werden 3 Apps genauer analysiert.
+
+\subsection{Tasker}
+Tasker\citep{google.play.tasker} ist eine App welche auf den ersten Blick alles anbietet. Die App kann beinahe auf jegliche Statusänderung reagieren. Sei es GPS Koordinaten oder eine SMS mit einem bestimmten Kennwort. Es erlaubt auch das Ausführen von Aktionen beim Verbinden oder Verlassen eines Wireless LANs. Die App wirkt aber auf den ersten Blick sehr umständlich und Kostet 3.99 CHF.
+
+\subsection{Task Center}
+Task Center\citep{google.play.taskcenter} scheint der schlanke Bruder von Tasker zu sein. Die App kann gratis installiert werden und ist mit In-App Käufen auch Werbefrei. Bei Task Center wird die Aktion jedoch nur bei Veränderung des Wireless LAN Verbingunsstatus ausgeführt. Dabei spielt der Netzwerkname bzw. die SSID keine Rolle.
+
+\subsection{NFC Actions}
+NFC Actions\citep{google.play.nfcactions} hat ein sehr ähnliches Prinzip wie die zu entwickelnde App aber führt diese beim erkennen eines NFC Tags aus. Dabei können AKtionen wie Bluetooth Ein oder Ausschalten oder das anrufen einer Telefonnummer ausgeführt werden. Zusätzlich lassen sich eigene NFC Tags schreiben welche dann bestimmte Aktionen auslösen.
+
+\subsection{Fazit}
+Die 3 analysierten Apps sowie die anderen welche bei der Recherche zum Vorschein kamen bieten einen ähnlichen Funktionsumfang an wie die App welche im Rahmen dieser Arbeit erstellt werden soll. Jedoch zeigen alle Apps gewisse Defizite auf welche die Entwicklung einer neuen App rechtfertigen. Einige Apps sind so umfangreich dass sie nicht mehr intuitiv zu bedienen sind andere wiederum lassen nur einen sehr einfachen Wireless LAN Aktions Auslöser zu.
+
+
+
+\section{Android SDK}
+\begin{itemize}
+\item BroadcastReceiver
+\item Service Intent (Background)
+\item WifiManager
+\item Android: Scanning von Wireless LANs
+\end{itemize}
