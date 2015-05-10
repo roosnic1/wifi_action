@@ -1,9 +1,123 @@
 %!TEX root = ../doc.tex
-\chapter{Resultate}
-\label{sec:Resultate}
+\chapter{Umsetzung des Prototyps}
+\label{sec:umsetzung}
 
-\textcolor{darkgray}{
-  \begin{itemize}
-  \item (Zusammenfassung der Resultate)
-  \end{itemize}
+\section{Vorbereitung}
+
+Für die Entwicklung des Prototypen wird Android Studio Version 1.2 von Google verwendet. Android Studio baut auf der freien Version von IntelliJ IDEA auf und verfügt daher über sehr viele nützliche Werkzeuge. Für die Versionskontrolle des Quellecodes wird Git und eine Repository auf Github\footnote{Repository auf Github: \url{https://github.com/roosnic1/wifi_action}} eingesetzt. Für das Testen der App wird ein Android Mobiltelefon des Types Nexus 5 mit der Android Version 5.1 verwendet. Die Dokumentation bzw. der Entwicklerbericht wird in Sublime Text 3 mit \LaTeX{} geschrieben.
+
+\section{Entwicklung}
+Für die Umsetzung der App werden im wesentlichen Activities, für die Darstellungen und Interaktionen mit dem Benutzer, sowie ein Receiver und ein Service benötigt. Dazu kommen noch Adapters und Modelle mit welchen Daten in einer Datenbank bzw. in eine Datei serialisiert werden können. Die einzelnen Komponenten werden in diesem Kapitel beschrieben und auf wichtige Eigenschaften wird hingewiesen.
+
+\subsection{Activities}
+
+\subsubsection{MainActivity}
+Die MainActivity ist die Ansicht welche dem Benutzer angezeigt wird wenn der Benutzer die App startet. Wie in der Abbildung \ref{fig:mainactivity} beinhaltet die Activity in einer ListView alle bereits erstellten Aktionen und bietet über 2 Buttons die Transaktion zu der LogActivity und ActionActivity an.
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.4\textwidth]{images/mainactivity.png}
+	\caption{Visuelle Repräsentation der MainActivity}
+	\label{fig:mainactivity}
+\end{figure}
+Wenn die MainActivity gestartet wird, wird ein Asynchroner Job gestartet welcher die Serialisierten Aktion aus einer Datei lädt und anzeigt. Beim hinzufügen einer neuen Aktion werden alle Aktionen neu gespeichert damit keine verloren geht. Wenn eine Aktion in der Liste lange geklickt wird, öffnet sich ein Kontext Menu welches das löschen einer Aktion erlaubt. \\
+Wird der Plus Button angeklickt werden alle bekannten Wireless LANs geladen und der ActionActivity übergeben. Das Laden der Wireless LANs ist mit Android sehr einfach.
+\begin{lstlisting}[language=Java]
+	private ArrayList<Wifi> getKnownWifi() {
+        WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        List<WifiConfiguration> wifis = wifi.getConfiguredNetworks();
+        ArrayList<Wifi> wifiList = new ArrayList<>();
+        for(WifiConfiguration w : wifis) {
+            wifiList.add(new Wifi(w.SSID,w.networkId););
+        }
+        return wifiList;
+    }
+\end{lstlisting}
+Mit der Funktion getConfiguredNetworks() werden alle Wireless LANs ausgegeben mit denen das Mobiltelefon bereits eine Verbindung hatte.
+
+\subsubsection{ActionActivity}
+In der ActionActivity können neue Aktionen eingestellt und gespeichert werden. Im ersten Spinnerelement werden die Verfügbaren Aktionen angezeigt. Je nach Auswahl werden in der restlichen Ansicht unterschiedliche Felder angezeigt oder Versteckt. Deshalb überlagern sich gewisse Elemente in der Abbildung \ref{fig:actionctivity}. Im zweiten Spinnerelement werden die bekannten Wireless LANs angezeigt welche von der MainActivity übergeben wurden. Die restlichen Elemente dienen der Einstellung der Aktion welche über den Button \glqq Save\grqq{} gespeichert werden kann. Bei der Aktion Send SMS besteht die Möglichkeit eine Nummer aus dem Telefonbuch des Androidsystem auszuwählen.
+\begin{lstlisting}[language=Java]
+    public void onClick(View view) {
+        Intent i = new Intent(Intent.ACTION_PICK, ContactsContract.CommonDataKinds.Phone.CONTENT_URI);
+        startActivityForResult(i,REQUEST_CONTACTPICKER);
+    }
+
+    if(resultCode == RESULT_OK) {
+        Uri contentUri = data.getData();
+        Cursor cursor = getContentResolver().query(contentUri, null, null, null, null);
+        cursor.moveToFirst();
+        String number = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+        if(number.length() > 0) {
+            etMessage3.setText(number);
+        }
+    }
+\end{lstlisting}
+Das Telefonbuch wird mit startActivityForResult gestartet und bei der Rückgabe wird der Eintrag aus dem Telefonbuch zurückgeben und ausgewertet. Dies hat den Vorteil dass die App nicht die Berechtigung zum lesen des Telefonbuches benötigt. Beim Drücken des \glqq Save\grqq{} Buttons werden die Daten zusammen gepackt und an die MainActivity zurück gegeben welche die Aktion speichert.
+\begin{lstlisting}[language=Java]
+-- ActionActivity.java -->
+	Action a = new Action(etTitle.getText().toString(),((Wifi)spWifis.getSelectedItem()).getSsid(), at,cbOnConnect.isChecked(),cbOnLeave.isChecked());
+	if(mActionType == 0) {
+	    a.setStringParam1(etMessage3.getText().toString());
+	} else {
+	    a.setStringParam1(etMessage1.getText().toString());
+	}
+	a.setStringParam2(etMessage2.getText().toString());
+	a.setBooleanParam1(swBoolean.isChecked());
+	Intent i = new Intent();
+	i.putExtra("ACTION",a);
+	setResult(RESULT_OK, i);
+	finish();
+<----
+
+-- MainActivity.java -->
+	if(resultCode == RESULT_OK) {
+		Action a = (Action) data.getSerializableExtra("ACTION");
+		mActionList.add(a);
+		actionAdapter.notifyDataSetChanged();
+		saveActionList();
+	}
+<----
+\end{lstlisting}
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.4\textwidth]{images/actionactivity.png}
+	\caption{Visuelle Repräsentation der ActionActivity}
+	\label{fig:actionctivity}
+\end{figure}
+
+\subsubsection{LogActivity}
+Die LogActivity ist im Vergleich zu den anderen Activities sehr schlicht. Aus einer Datenbank werden alle Log Einträge geladen und angezeigt. Der Adapter der ListView implementiert das VieHolder Prinzip welches auch bei sehr vielen Einträgen ein effizientes und für den Benutzer angenehmes Scrollen durch die Liste erlaubt.
+
+% \begin{figure}[ht]
+% 	\centering
+% 	\includegraphics[width=0.4\textwidth]{images/logactivity.png}
+% 	\caption{Visuelle Repräsentation der LogActivity}
+% 	\label{fig:logactivity}
+% \end{figure}
+
+\newpage{}
+\subsection{ConnectivityChangedReceiver}
+Der ConnectivityChangedReceiver wird aufgerufen wenn es irgendeine Veränderung an der Netzwerkverbindung gibt. Der Receiver muss in der Lage sein zu wissen mit welchem Netzwerk das Mobiltelefon zuvor verbunden bzw. was der Status vor der Änderung der Netzwerkverbindung war. In einer ersten Implementation wurde dies mit Klassen Variabeln gelöst. Die Instanz des ConnectivityChangedReceiver gibt es nur während des Aufrufs und der Ausführung der onReceive Funktion. Darum ging der Wert der Variabeln nach kurzer Zeit Verloren. Die Lösung für dieses Problem heisst Shared Preferences. Mit den Shared Prefrences von Android können der Name und den Status der Netzwerkverbindung persistent gespeichert werden und bei der nächsten Ausführung von onReceive wieder gelesen werden.
+\begin{lstlisting}[language=Java]
+public void onReceive(Context context, Intent intent) {
+    SharedPreferences sharedPreferences = context.getSharedPreferences("com.koki.app.wifiaction",Context.MODE_PRIVATE);
+    String currentWifi = sharedPreferences.getString(CW,"");
+    String currentState = sharedPreferences.getString(CS,"");
+    ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+    NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+    if(networkInfo != null) {
+        if(networkInfo.getTypeName().equals(currentState) && networkInfo.getExtraInfo().equals(currentWifi) ) {
+
+        } else if (networkInfo.getTypeName().equals("WIFI") && !networkInfo.getExtraInfo().equals(currentWifi)) {
+            ActionService.startAction(context, networkInfo.getExtraInfo(), true);
+            sharedPreferences.edit().putString(CW, networkInfo.getExtraInfo()).putString(CS,networkInfo.getTypeName()).commit();
+        } else if(currentState.equals("WIFI") && !networkInfo.getTypeName().equals("WIFI")) {
+            ActionService.startAction(context, currentWifi, false);
+            sharedPreferences.edit().putString(CW,networkInfo.getExtraInfo()).putString(CS,networkInfo.getTypeName()).commit();
+        }
+    }
 }
+\end{lstlisting}
+In der Funktion onReceive wird überprüft ob der Verbindungstype gewechselt hat oder ob der Wireles LAN Netzwerkname geändert hat und die Funktion im IntentService mit den entsprechenden Parameter aufgerufen.
+
+\subsection{ActionService}
