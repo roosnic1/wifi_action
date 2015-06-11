@@ -10,6 +10,21 @@ Für die Entwicklung des Prototypen wird Android Studio Version 1.2 von Google v
 Für die Umsetzung der App werden im wesentlichen Activities, für die Darstellungen und Interaktionen mit dem Benutzer, sowie ein Receiver und ein Service benötigt. Dazu kommen noch Adapters und Modelle mit welchen Daten in einer Datenbank bzw. in eine Datei serialisiert werden können. Die einzelnen Komponenten werden in diesem Kapitel beschrieben und auf wichtige Eigenschaften wird hingewiesen.
 
 \subsection{Activities}
+In Android repräsentieren Activities eine Benutzeroberfläche. Für die App wurden 3 Activities verwendet, welche mit ihren Verbindungen in der Abbildung \ref{fig:activities} dargestellt sind.
+
+% MainActivity->ActionActivity: open
+% note over ActionActivity: create Action
+% ActionActivity->MainActivity: return Action
+% MainActivity->Action List: save Action
+% MainActivity->LogActivity: open
+% note over LogActivity: show Logs
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\textwidth]{images/activities.png}
+    \caption{Sequenzdiagramm der verwendeten Activities}
+    \label{fig:activities}
+\end{figure}
+
 
 \subsubsection{MainActivity}
 Die MainActivity ist die Ansicht welche dem Benutzer angezeigt wird wenn der Benutzer die App startet. Wie in der Abbildung \ref{fig:mainactivity} beinhaltet die Activity in einer ListView alle bereits erstellten Aktionen und bietet über 2 Buttons die Transaktion zu der LogActivity und ActionActivity an.
@@ -19,8 +34,8 @@ Die MainActivity ist die Ansicht welche dem Benutzer angezeigt wird wenn der Ben
 	\caption{Visuelle Repräsentation der MainActivity}
 	\label{fig:mainactivity}
 \end{figure}
-Wenn die MainActivity gestartet wird, wird ein Asynchroner Job gestartet welcher die Serialisierten Aktion aus einer Datei lädt und anzeigt. Beim hinzufügen einer neuen Aktion werden alle Aktionen neu gespeichert damit keine verloren geht. Wenn eine Aktion in der Liste lange geklickt wird, öffnet sich ein Kontext Menu welches das löschen einer Aktion erlaubt. \\
-Wird der Plus Button angeklickt werden alle bekannten Wireless LANs geladen und der ActionActivity übergeben. Das Laden der Wireless LANs ist mit Android sehr einfach.
+Wenn die MainActivity gestartet wird, wird ein Asynchroner Job gestartet, welcher die serialisierten Aktion aus einer Datei lädt und anzeigt. Beim hinzufügen einer neuen Aktion werden alle Aktionen neu gespeichert damit keine verloren geht. Wenn eine Aktion in der Liste lange geklickt wird, öffnet sich ein Kontext Menu welches das löschen einer Aktion erlaubt. \\
+Wird der Plus Button angeklickt werden alle bekannten Wireless LANs geladen und der ActionActivity übergeben. Das Laden der Wireless LANs ist mit Android einfach zu machen.
 \begin{lstlisting}[language=Java]
 	private ArrayList<Wifi> getKnownWifi() {
         WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
@@ -86,7 +101,7 @@ Das Telefonbuch wird mit startActivityForResult gestartet und bei der Rückgabe 
 \end{figure}
 
 \subsubsection{LogActivity}
-Die LogActivity ist im Vergleich zu den anderen Activities sehr schlicht. Aus einer Datenbank werden alle Log Einträge geladen und angezeigt. Der Adapter der ListView implementiert das VieHolder Prinzip welches auch bei sehr vielen Einträgen ein effizientes und für den Benutzer angenehmes Scrollen durch die Liste erlaubt.
+Die LogActivity ist im Vergleich zu den anderen Activities sehr schlicht. Aus einer Datenbank werden alle Log Einträge geladen und angezeigt. Der Adapter der ListView implementiert das ViewHolder Prinzip welches auch bei sehr vielen Einträgen ein effizientes und für den Benutzer angenehmes Scrollen durch die Liste erlaubt.
 
 % \begin{figure}[ht]
 % 	\centering
@@ -97,7 +112,16 @@ Die LogActivity ist im Vergleich zu den anderen Activities sehr schlicht. Aus ei
 
 \newpage{}
 \subsection{ConnectivityChangedReceiver}
-Der ConnectivityChangedReceiver wird aufgerufen wenn es irgendeine Veränderung an der Netzwerkverbindung gibt. Der Receiver muss in der Lage sein zu wissen mit welchem Netzwerk das Mobiltelefon zuvor verbunden bzw. was der Status vor der Änderung der Netzwerkverbindung war. In einer ersten Implementation wurde dies mit Klassen Variabeln gelöst. Die Instanz des ConnectivityChangedReceiver gibt es nur während des Aufrufs und der Ausführung der onReceive Funktion. Darum ging der Wert der Variabeln nach kurzer Zeit Verloren. Die Lösung für dieses Problem heisst Shared Preferences. Mit den Shared Prefrences von Android können der Name und den Status der Netzwerkverbindung persistent gespeichert werden und bei der nächsten Ausführung von onReceive wieder gelesen werden.
+Der ConnectivityChangedReceiver wird aktiviert und ausgeführt wenn es irgend eine Veränderung an der Netzwerkverbindung gab. Dieser Veränderung wird an den ActionService übergeben welcher prüft ob eine Aktion ausgeführt werden muss. Dieser Ablauf ist im Sequenzdiagram in der Abbildung \ref{fig:seqactions} dargestellt.
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/seqActions.png}
+    \caption{Sequenzdiagramm einer Netzwerkänderung}
+    \label{fig:seqactions}
+\end{figure}
+
+
+ Der Receiver muss in der Lage sein zu wissen mit welchem Netzwerk das Mobiltelefon zuvor verbunden bzw. was der Status vor der Änderung der Netzwerkverbindung war. In einer ersten Implementation wurde dies mit Klassen Variabeln gelöst. Die Instanz des ConnectivityChangedReceiver gibt es aber nur während des Aufrufs und der Ausführung der onReceive Funktion. Darum ging der Wert der Variabeln nach kurzer Zeit Verloren. Die Lösung für dieses Problem heisst Shared Preferences. Mit den Shared Prefrences von Android können der Name und den Status der Netzwerkverbindung persistent gespeichert werden und bei der nächsten Ausführung von onReceive wieder gelesen werden.
 \begin{lstlisting}[language=Java]
 public void onReceive(Context context, Intent intent) {
     SharedPreferences sharedPreferences = context.getSharedPreferences("com.koki.app.wifiaction",Context.MODE_PRIVATE);
@@ -118,10 +142,10 @@ public void onReceive(Context context, Intent intent) {
     }
 }
 \end{lstlisting}
-In der Funktion onReceive wird überprüft ob der Verbindungstype gewechselt hat oder ob der Wireles LAN Netzwerkname geändert hat und die Funktion im IntentService mit den entsprechenden Parameter aufgerufen.
+In der Funktion onReceive wird überprüft ob der Verbindungstype gewechselt hat oder ob der Wireles LAN Netzwerkname geändert hat und die Funktion im ActionService mit den entsprechenden Parameter aufgerufen.
 
 \subsection{ActionService}
-Der ActionService erbt vom IntentService und wird beim Aufruf von onHandleIntent in einem eigenen Thread ausgeführt. Zuerst wird die Liste mit den Aktionen aus der Datei, welche die MainActivity schreibt, geladen. Danach wird überprüft ob für das aktuelle Wireless LAN und den Status der Verbindung eine Aktion existiert. Wird eine Aktion gefunden wird sie sogleich ausgeführt. Für jede Ausführung einer Aktion wird ein in der Datenbank ein Log Eintrag erstellt und abgespeichert.
+Der ActionService erbt vom IntentService und wird beim Aufruf von onHandleIntent in einem eigenen Thread ausgeführt. Zuerst wird die Liste mit den Aktionen aus der Datei, welche die MainActivity schreibt, geladen. Danach wird überprüft ob für das aktuelle Wireless LAN und den Status der Verbindung eine Aktion existiert. Wird eine Aktion gefunden wird sie sogleich ausgeführt. Für jede Ausführung einer Aktion wird ein der Datenbank ein Log Eintrag erstellt.
 \begin{lstlisting}[language=Java]
 protected void onHandleIntent(Intent intent) {
     if (intent != null) {
@@ -154,4 +178,4 @@ protected void onHandleIntent(Intent intent) {
 \end{lstlisting}
 
 \section{Restliche Implementationen}
-Die Handhabung der Datenbank wird mit einem neuen Framework namens Realm.io\footnote{Realm.io mobile database \url{http://realm.io/}} gehandhabt. Diese Framework erleichtert das persistente Speichern sowie den Austausch von Daten zwischen verschiedenen Aktivitäten und Threads erheblich.
+Die Handhabung der Datenbank wurde mit einem neuen Framework namens Realm.io\footnote{Realm.io mobile database \url{http://realm.io/}} realisiert. Diese Framework erleichtert das persistente Speichern sowie den Austausch von Daten zwischen verschiedenen Aktivitäten und Threads erheblich.
