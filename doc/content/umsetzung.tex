@@ -3,8 +3,7 @@
 \label{sec:umsetzung}
 
 \section{Vorbereitung}
-
-Für die Entwicklung des Prototypen wird Android Studio Version 1.2 von Google verwendet. Android Studio baut auf der freien Version von IntelliJ IDEA auf und verfügt daher über sehr viele nützliche Werkzeuge. Für die Versionskontrolle des Quellecodes wird Git und eine Repository auf Github\footnote{Repository auf Github: \url{https://github.com/roosnic1/wifi_action}} eingesetzt. Für das Testen der App wird ein Android Mobiltelefon des Types Nexus 5 mit der Android Version 5.1 verwendet. Das Android Projekt wird mit der neusten Android SDK Version entwickelt. Das bedeutet die App funktioniert nur auf Mobiltelefonen mit Android Verison 5.1 aber dafür können die neusten Funktionen vom SDK verwendet werden. Die Dokumentation bzw. der Entwicklerbericht wird in Sublime Text 3 mit \LaTeX{} geschrieben.
+Für die Entwicklung des Prototypen wird Android Studio Version 1.2 von Google verwendet. Android Studio baut auf der freien Version von IntelliJ IDEA auf und verfügt daher über sehr viele nützliche Entwicklerwerkzeuge. Für die Versionskontrolle des Quellecodes wird Git und eine Repository auf Github\footnote{Repository auf Github: \url{https://github.com/roosnic1/wifi_action}} verwendet. Für das Testen der App wird ein Android Mobiltelefon des Types Nexus 5 mit der Android Version 5.1 verwendet. Das Android Projekt wird mit der neusten Android SDK Version entwickelt. Das bedeutet die App funktioniert nur auf Mobiltelefonen mit der Android Verison 5.1 dafür können die neusten Funktionen vom SDK verwendet werden. Die Dokumentation bzw. der Entwicklerbericht wird in Sublime Text 3 mit \LaTeX{} geschrieben.
 
 \section{Entwicklung}
 Für die Umsetzung der App werden im wesentlichen Activities, für die Darstellungen und Interaktionen mit dem Benutzer, sowie ein Receiver und ein Service benötigt. Dazu kommen noch Adapters und Modelle mit welchen Daten in einer Datenbank bzw. in eine Datei serialisiert werden können. Die einzelnen Komponenten werden in diesem Kapitel beschrieben und auf wichtige Eigenschaften wird hingewiesen.
@@ -34,8 +33,8 @@ Die MainActivity ist die Ansicht welche dem Benutzer angezeigt wird wenn der Ben
 	\caption{Visuelle Repräsentation der MainActivity}
 	\label{fig:mainactivity}
 \end{figure}
-Wenn die MainActivity gestartet wird, wird ein Asynchroner Job gestartet, welcher die serialisierten Aktion aus einer Datei lädt und anzeigt. Beim hinzufügen einer neuen Aktion werden alle Aktionen neu gespeichert damit keine verloren geht. Wenn eine Aktion in der Liste lange geklickt wird, öffnet sich ein Kontext Menu welches das löschen einer Aktion erlaubt. \\
-Wird der Plus Button angeklickt werden alle bekannten Wireless LANs geladen und der ActionActivity übergeben. Das Laden der Wireless LANs ist mit Android einfach zu machen.
+Wenn die MainActivity gestartet wird, wird ein Asynchroner Job gestartet, welcher die serialisierten Aktion aus einer Datei lädt und anzeigt. Beim hinzufügen einer neuen Aktion werden alle Aktionen neu gespeichert damit keine verloren geht. Wenn eine Aktion in der Liste lange angeklickt wird, öffnet sich ein Kontext Menu, welches das löschen einer Aktion erlaubt. \\
+Wird der Plus Button angeklickt werden alle bekannten Wireless LANs geladen und der ActionActivity übergeben. Das Laden der Wireless LANs ist mit Android einfach zu machen. \\
 \begin{lstlisting}[language=Java]
 	private ArrayList<Wifi> getKnownWifi() {
         WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
@@ -50,7 +49,7 @@ Wird der Plus Button angeklickt werden alle bekannten Wireless LANs geladen und 
 Mit der Funktion getConfiguredNetworks() werden alle Wireless LANs ausgegeben mit denen das Mobiltelefon bereits eine Verbindung hatte.
 
 \subsubsection{ActionActivity}
-In der ActionActivity können neue Aktionen eingestellt und gespeichert werden. Im ersten Spinnerelement werden die Verfügbaren Aktionen angezeigt. Je nach Auswahl werden in der restlichen Ansicht unterschiedliche Felder angezeigt oder Versteckt. Deshalb überlagern sich gewisse Elemente in der Abbildung \ref{fig:actionctivity}. Im zweiten Spinnerelement werden die bekannten Wireless LANs angezeigt welche von der MainActivity übergeben wurden. Die restlichen Elemente dienen der Einstellung der Aktion welche über den Button \glqq Save\grqq{} gespeichert werden kann. Bei der Aktion Send SMS besteht die Möglichkeit eine Nummer aus dem Telefonbuch des Androidsystem auszuwählen.
+In der ActionActivity können neue Aktionen eingestellt und gespeichert werden. Im ersten Spinnerelement\footnote{In Android ist ein Spinnerelement eine Dropdown Liste} werden die Verfügbaren Aktionen angezeigt. Je nach Auswahl werden in der restlichen Ansicht unterschiedliche Felder angezeigt oder Versteckt. Deshalb überlagern sich gewisse Elemente in der Abbildung \ref{fig:actionctivity}. Im zweiten Spinnerelement werden die bekannten Wireless LANs angezeigt, welche von der MainActivity übergeben wurden. Die restlichen Elemente dienen der Einstellung der Aktion, welche über den Button \glqq Save\grqq{} gespeichert werden kann. Bei der Aktion Send SMS besteht die Möglichkeit eine Nummer aus dem Telefonbuch des Androidsystem auszuwählen. \\
 \begin{lstlisting}[language=Java]
     public void onClick(View view) {
         Intent i = new Intent(Intent.ACTION_PICK, ContactsContract.CommonDataKinds.Phone.CONTENT_URI);
@@ -67,7 +66,7 @@ In der ActionActivity können neue Aktionen eingestellt und gespeichert werden. 
         }
     }
 \end{lstlisting}
-Das Telefonbuch wird mit startActivityForResult gestartet und bei der Rückgabe wird der Eintrag aus dem Telefonbuch zurückgeben und ausgewertet. Dies hat den Vorteil dass die App nicht die Berechtigung zum lesen des Telefonbuches benötigt. Beim Drücken des \glqq Save\grqq{} Buttons werden die Daten zusammen gepackt und an die MainActivity zurück gegeben welche die Aktion speichert.
+Das Telefonbuch wird mit startActivityForResult gestartet und bei der Rückgabe wird der Eintrag aus dem Telefonbuch zurückgeben und ausgewertet. Dies hat den Vorteil dass die App nicht die Berechtigung zum lesen des Telefonbuches benötigt. Beim Drücken des \glqq Save\grqq{} Buttons werden die Daten zusammen gepackt und an die MainActivity zurück gegeben welche die Aktion speichert. \\
 \begin{lstlisting}[language=Java]
 -- ActionActivity.java -->
 	Action a = new Action(etTitle.getText().toString(),((Wifi)spWifis.getSelectedItem()).getSsid(), at,cbOnConnect.isChecked(),cbOnLeave.isChecked());
@@ -101,7 +100,7 @@ Das Telefonbuch wird mit startActivityForResult gestartet und bei der Rückgabe 
 \end{figure}
 
 \subsubsection{LogActivity}
-Die LogActivity ist im Vergleich zu den anderen Activities sehr schlicht. Aus einer Datenbank werden alle Log Einträge geladen und angezeigt. Der Adapter der ListView implementiert das ViewHolder Prinzip welches auch bei sehr vielen Einträgen ein effizientes und für den Benutzer angenehmes Scrollen durch die Liste erlaubt.
+Die LogActivity ist im Vergleich zu den anderen Activities sehr schlicht. Aus einer Datenbank werden alle Log Einträge geladen und angezeigt. Der Adapter der ListView implementiert das ViewHolder Prinzip, welches auch bei sehr vielen Einträgen ein effizientes und für den Benutzer angenehmes Scrollen durch die Liste erlaubt.
 
 % \begin{figure}[ht]
 % 	\centering
@@ -112,7 +111,7 @@ Die LogActivity ist im Vergleich zu den anderen Activities sehr schlicht. Aus ei
 
 \newpage{}
 \subsection{ConnectivityChangedReceiver}
-Der ConnectivityChangedReceiver wird aktiviert und ausgeführt wenn es irgend eine Veränderung an der Netzwerkverbindung gab. Dieser Veränderung wird an den ActionService übergeben welcher prüft ob eine Aktion ausgeführt werden muss. Dieser Ablauf ist im Sequenzdiagram in der Abbildung \ref{fig:seqactions} dargestellt.
+Der ConnectivityChangedReceiver wird aktiviert und ausgeführt wenn es irgendeine Veränderung an der Netzwerkverbindung gibt. Diese Veränderung wird an den ActionService übergeben, welcher prüft ob eine Aktion ausgeführt werden muss. Dieser Ablauf ist im Sequenzdiagram in der Abbildung \ref{fig:seqactions} dargestellt.
 \begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\textwidth]{images/seqActions.png}
@@ -121,7 +120,7 @@ Der ConnectivityChangedReceiver wird aktiviert und ausgeführt wenn es irgend ei
 \end{figure}
 
 
- Der Receiver muss in der Lage sein zu wissen mit welchem Netzwerk das Mobiltelefon zuvor verbunden bzw. was der Status vor der Änderung der Netzwerkverbindung war. In einer ersten Implementation wurde dies mit Klassen Variabeln gelöst. Die Instanz des ConnectivityChangedReceiver gibt es aber nur während des Aufrufs und der Ausführung der onReceive Funktion. Darum ging der Wert der Variabeln nach kurzer Zeit Verloren. Die Lösung für dieses Problem heisst Shared Preferences. Mit den Shared Prefrences von Android können der Name und den Status der Netzwerkverbindung persistent gespeichert werden und bei der nächsten Ausführung von onReceive wieder gelesen werden.
+ Der Receiver muss in der Lage sein zu wissen mit welchem Netzwerk das Mobiltelefon zuvor verbunden bzw. was der Status vor der Änderung der Netzwerkverbindung war. In einer ersten Implementation wurde dies mit Klassen Variabeln gelöst. Die Instanz des ConnectivityChangedReceiver lebt  aber nur während des Aufrufs und der Ausführung der onReceive Funktion. Darum ging der Wert der Variabeln nach kurzer Zeit Verloren. Die Lösung für dieses Problem heisst Shared Preferences. Mit den Shared Prefrences von Android können der Name und der Status der Netzwerkverbindung persistent gespeichert werden und bei der nächsten Ausführung von onReceive wieder gelesen werden. \\
 \begin{lstlisting}[language=Java]
 public void onReceive(Context context, Intent intent) {
     SharedPreferences sharedPreferences = context.getSharedPreferences("com.koki.app.wifiaction",Context.MODE_PRIVATE);
@@ -145,7 +144,7 @@ public void onReceive(Context context, Intent intent) {
 In der Funktion onReceive wird überprüft ob der Verbindungstype gewechselt hat oder ob der Wireles LAN Netzwerkname geändert hat und die Funktion im ActionService mit den entsprechenden Parameter aufgerufen.
 
 \subsection{ActionService}
-Der ActionService erbt vom IntentService und wird beim Aufruf von onHandleIntent in einem eigenen Thread ausgeführt. Zuerst wird die Liste mit den Aktionen aus der Datei, welche die MainActivity schreibt, geladen. Danach wird überprüft ob für das aktuelle Wireless LAN und den Status der Verbindung eine Aktion existiert. Wird eine Aktion gefunden wird sie sogleich ausgeführt. Für jede Ausführung einer Aktion wird ein der Datenbank ein Log Eintrag erstellt.
+Der ActionService erbt vom IntentService und wird beim Aufruf von onHandleIntent in einem eigenen Thread ausgeführt. Zuerst wird die Liste mit den Aktionen aus der Datei, welche die MainActivity schreibt, geladen. Danach wird überprüft ob für das aktuelle Wireless LAN und den Status der Verbindung eine Aktion existiert. Wird eine Aktion gefunden wird sie sogleich ausgeführt. Für jede Ausführung einer Aktion wird ein der Datenbank ein Log Eintrag erstellt. \\
 \begin{lstlisting}[language=Java]
 protected void onHandleIntent(Intent intent) {
     if (intent != null) {
@@ -178,4 +177,4 @@ protected void onHandleIntent(Intent intent) {
 \end{lstlisting}
 
 \section{Restliche Implementationen}
-Die Handhabung der Datenbank wurde mit einem neuen Framework namens Realm.io\footnote{Realm.io mobile database \url{http://realm.io/}} realisiert. Diese Framework erleichtert das persistente Speichern sowie den Austausch von Daten zwischen verschiedenen Aktivitäten und Threads erheblich.
+Die Handhabung der Datenbank wurde mit einem neuen Framework namens Realm.io\footnote{Realm.io Mobile Database \url{http://realm.io/}} realisiert. Dieses Framework erleichtert das persistente Speichern sowie den Austausch von Daten zwischen verschiedenen Aktivitäten und Threads erheblich.
